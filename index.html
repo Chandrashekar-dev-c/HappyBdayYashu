@@ -1,0 +1,791 @@
+<title>Yashashwini's Heart Monitor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Caveat:wght@500..700&family=Figtree:wght@400..700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a hospital chart printed on pink ECG paper, with a live heart monitor pinned to the top of the screen.
+   Her heart rate follows what she is looking at. Chunky ink outlines and hard shadows keep it playful.
+   Color: ECG-paper blush, heart red from the emoji, maroon ink, cobalt (her sweater), gold. The monitor itself stays dark in both themes.
+   Type: Bricolage Grotesque for headlines, Figtree for reading, JetBrains Mono for monitor numbers, Caveat for the doctor's scribbles. */
+:root {
+  --bg: #FFF3F1;
+  --surface: #FFFFFF;
+  --ink: #3B1016;
+  --ink-soft: #85575C;
+  --line: #F1C9C6;
+  --heart: #E0383E;
+  --heart-deep: #B5222A;
+  --pink: #F7A3A0;
+  --cobalt: #2A43D6;
+  --gold: #F2B33D;
+  --good: #1F8A5B;
+  --grid-b: rgba(224, 56, 62, .17);
+  --grid-s: rgba(224, 56, 62, .08);
+  --shadow: rgba(59, 16, 22, .25);
+  --mon-bg: #0E0709;
+  --mon-trace: #FF5A62;
+  --mon-ink: #FFE9E6;
+  --mon-dim: #E0A5A9;
+  --pol-bg: #FFFDFC;
+  --pol-ink: #3B1016;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --hand: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #150A0C; --surface: #25121A; --ink: #FFE9E6; --ink-soft: #D7A7A9; --line: #4D2530;
+    --heart: #FF5A62; --heart-deep: #FF8A90; --pink: #8C3A44; --cobalt: #8EA0FF; --gold: #F5BE50; --good: #4FD18F;
+    --grid-b: rgba(255, 90, 98, .15); --grid-s: rgba(255, 90, 98, .06); --shadow: rgba(0, 0, 0, .6);
+    --pol-bg: #FFF4F1;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #150A0C; --surface: #25121A; --ink: #FFE9E6; --ink-soft: #D7A7A9; --line: #4D2530;
+  --heart: #FF5A62; --heart-deep: #FF8A90; --pink: #8C3A44; --cobalt: #8EA0FF; --gold: #F5BE50; --good: #4FD18F;
+  --grid-b: rgba(255, 90, 98, .15); --grid-s: rgba(255, 90, 98, .06); --shadow: rgba(0, 0, 0, .6);
+  --pol-bg: #FFF4F1;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background-color: var(--bg); color: var(--ink);
+  background-image: linear-gradient(var(--grid-b) 1px, transparent 1px), linear-gradient(90deg, var(--grid-b) 1px, transparent 1px),
+    linear-gradient(var(--grid-s) 1px, transparent 1px), linear-gradient(90deg, var(--grid-s) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  font: 400 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 56px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--mon-bg); }
+.page { max-width: 1060px; margin: 0 auto; }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: var(--cobalt); font-weight: 600; }
+:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.hand { font-family: var(--hand); font-weight: 600; }
+
+/* ---------- Monitor (pinned) ---------- */
+.mon { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; max-width: 1060px; margin: 0 auto;
+  display: grid; grid-template-columns: auto auto 1fr auto; gap: 12px; align-items: center;
+  background: var(--mon-bg); color: var(--mon-ink); padding: 8px 14px; border-radius: 0 0 18px 18px;
+  box-shadow: 0 10px 24px -10px var(--shadow); height: 76px; overflow: hidden; }
+.mon-heart { width: 40px; height: 52px; transform-origin: 50% 60%; }
+.mon-heart img { width: 100%; height: 100%; object-fit: contain; }
+.mon-bpm { font: 700 2rem/1 var(--mono); font-variant-numeric: tabular-nums; min-width: 3.1ch; text-align: right; color: var(--mon-trace); }
+.mon-bpm small { display: block; font-size: .6rem; letter-spacing: .1em; color: var(--mon-dim); text-align: right; font-weight: 500; }
+.mon-trace { position: relative; height: 56px; min-width: 0; overflow: hidden; }
+.mon-trace canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ward { position: absolute; left: 4px; top: 0; font: 500 .62rem/1.2 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mon-dim); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.snd { border: 1.5px solid var(--mon-dim); background: none; color: var(--mon-ink); border-radius: 999px; padding: 6px 10px; font: 500 .68rem/1 var(--mono); }
+.snd[aria-pressed="true"] { background: var(--mon-trace); color: #1a0508; border-color: var(--mon-trace); }
+@media (max-width: 460px) { .snd { display: none; } .mon { grid-template-columns: auto auto 1fr; gap: 8px; } .mon-bpm { font-size: 1.7rem; } }
+
+/* ---------- Common ---------- */
+.sec { padding-block: 64px 4px; }
+.h2 { font: 800 clamp(2.1rem, 8vw, 4rem)/.98 var(--display); letter-spacing: -.03em; margin: 0 0 10px; text-wrap: balance; }
+.lede { color: var(--ink-soft); max-width: 54ch; margin: 0 0 26px; font-size: 1.08rem; }
+.chunk { border: 2.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); border-radius: 16px; background: var(--surface); }
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 2.5px solid var(--ink); padding: 13px 22px; border-radius: 999px;
+  background: var(--heart); color: #fff; font-weight: 700; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.ink { background: var(--ink); color: var(--bg); box-shadow: 4px 4px 0 var(--heart); }
+.tag { display: inline-block; font: 700 .7rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 9px; border-radius: 6px; background: var(--ink); color: var(--bg); }
+
+/* ---------- Hero ---------- */
+.hero { display: grid; gap: 28px; padding-block: 36px 0; align-items: center; }
+@media (min-width: 860px) { .hero { grid-template-columns: minmax(0, 380px) 1fr; gap: 52px; } }
+.bighrt { position: relative; display: grid; place-items: center; aspect-ratio: 1 / 1; max-width: min(380px, 72vw); width: 100%; margin-inline: auto; background: var(--heart); border: 2.5px solid var(--ink);
+  border-radius: 50%; box-shadow: 8px 8px 0 var(--ink); border-width: 3px; cursor: pointer; padding: 0; }
+.bighrt img { width: 40%; margin-top: -3%; filter: drop-shadow(0 10px 0 rgba(0, 0, 0, .18)); transform-origin: 50% 60%; }
+.bighrt .hint { position: absolute; bottom: 9%; left: 50%; transform: translateX(-50%); font: 700 1.25rem/1 var(--hand); color: #fff; white-space: nowrap; }
+.hero h1 { font: 800 clamp(2.5rem, 9vw, 5rem)/.94 var(--display); letter-spacing: -.035em; margin: 0 0 16px; text-wrap: balance; }
+.hero p { color: var(--ink-soft); font-size: 1.1rem; max-width: 46ch; margin: 0 0 18px; }
+.chart { padding: 16px 18px; margin: 0 0 20px; display: grid; gap: 0; max-width: 560px; }
+.chart div { display: grid; grid-template-columns: 9.5rem 1fr; gap: 10px; padding: 7px 0; border-bottom: 1.5px dashed var(--line); }
+.chart div:last-child { border-bottom: 0; }
+.chart dt { font: 700 .72rem/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.chart dd { margin: 0; font-weight: 600; }
+.chart dd.hand { font-size: 1.3rem; line-height: 1.1; color: var(--heart); }
+@media (max-width: 440px) { .chart div { grid-template-columns: 1fr; gap: 0; } }
+.count { display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; background: var(--surface); border: 2.5px solid var(--ink);
+  font: 700 .95rem/1 var(--mono); font-variant-numeric: tabular-nums; }
+.count i { width: 10px; height: 10px; border-radius: 50%; background: var(--heart); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.6); opacity: .5; } }
+
+/* ---------- Case files ---------- */
+.cases { display: grid; gap: 18px; }
+.case { background: var(--surface); border: 2.5px solid var(--ink); border-radius: 16px; box-shadow: 5px 5px 0 var(--ink); overflow: hidden; }
+.case-btn { width: 100%; border: 0; text-align: left; background: var(--a); color: var(--af); padding: 16px 18px; display: grid; grid-template-columns: 1fr auto auto; gap: 6px 14px; align-items: center; min-height: 92px; }
+.case-name { font: 800 clamp(1.5rem, 5.5vw, 2.3rem)/1 var(--display); letter-spacing: -.025em; grid-column: 1; }
+.case-meta { grid-column: 1; grid-row: 2; font: 500 .74rem/1.4 var(--mono); letter-spacing: .03em; opacity: .92; }
+.case-thumb { grid-column: 2; grid-row: 1 / span 2; width: 62px; height: 62px; border-radius: 50%; object-fit: cover; border: 2.5px solid var(--af); }
+.case-plus { grid-column: 3; grid-row: 1 / span 2; width: 28px; height: 28px; position: relative; }
+.case-plus::before, .case-plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 3px; background: var(--af); border-radius: 2px; transform: translate(-50%, -50%); transition: transform .3s; }
+.case-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.case.open .case-plus::after { transform: translate(-50%, -50%) rotate(0); }
+.panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+.case.open .panel { grid-template-rows: 1fr; }
+.panel-in { overflow: hidden; min-height: 0; }
+.panel-pad { padding: 20px 18px 22px; }
+.note { font: 600 1.5rem/1.2 var(--hand); margin: 0 0 20px; max-width: 38ch; color: var(--heart); }
+.pols { columns: 2 140px; column-gap: 16px; }
+@media (min-width: 760px) { .pols { columns: 3; column-gap: 22px; } }
+.pol { display: block; width: 100%; margin: 0 0 20px; break-inside: avoid; border: 0; text-align: left; background: var(--pol-bg); color: var(--pol-ink);
+  padding: 8px 8px 10px; border-radius: 3px; box-shadow: 0 8px 18px -6px var(--shadow); transform: rotate(var(--r, 0deg)); transition: transform .25s; cursor: zoom-in; }
+.pol:hover { transform: rotate(0deg) scale(1.03); }
+.pol img { width: 100%; height: auto; background: #e9d7d5; }
+.pol span { display: block; font: 600 1.1rem/1.1 var(--hand); padding: 8px 2px 0; }
+.song { margin: 4px 0 0; font-weight: 700; }
+
+/* ---------- Stimulus lab ---------- */
+.lab { display: grid; gap: 18px; }
+@media (min-width: 900px) { .lab { grid-template-columns: 1.25fr 1fr; align-items: start; } }
+.stims { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 560px) { .stims { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .stims { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stim { border: 2.5px solid var(--ink); border-radius: 14px; padding: 14px; text-align: left; min-height: 84px; background: var(--s); color: var(--sf);
+  box-shadow: 4px 4px 0 var(--ink); font: 800 1.15rem/1.05 var(--display); letter-spacing: -.01em; transition: transform .12s, box-shadow .12s; }
+.stim:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.stim[aria-pressed="true"] { outline: 3px solid var(--heart); outline-offset: 3px; }
+.reading { padding: 20px 20px 22px; position: sticky; top: 96px; }
+.reading .big { font: 700 4rem/1 var(--mono); color: var(--heart); font-variant-numeric: tabular-nums; }
+.reading .big small { font-size: 1rem; color: var(--ink-soft); }
+.reading h3 { margin: 6px 0 8px; font: 800 1.5rem/1.1 var(--display); letter-spacing: -.02em; }
+.reading p { margin: 0 0 10px; }
+.reading .rx { font: 600 1.5rem/1.15 var(--hand); color: var(--heart); }
+
+/* ---------- Lookbook ---------- */
+.looks { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 6px 8px 22px 2px; scrollbar-width: thin; }
+.look { flex: 0 0 min(78%, 290px); scroll-snap-align: start; display: grid; gap: 10px; align-content: start; }
+.look-img { aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; position: relative; background: #e9d7d5; border: 2.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+.look-img img { width: 100%; height: 100%; object-fit: cover; }
+.look-tag { position: absolute; left: 10px; top: 10px; }
+.look h3 { margin: 4px 0 0; font: 800 1.4rem/1.05 var(--display); letter-spacing: -.02em; }
+.look p { margin: 0; color: var(--ink-soft); font-size: .96rem; }
+.stars { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+.star { border: 0; background: none; padding: 3px; font-size: 1.6rem; line-height: 1; color: var(--line); }
+.star.on { color: var(--gold); }
+.verdict { font: 600 1.1rem/1.1 var(--hand); margin-left: 8px; }
+.look-nav { display: flex; gap: 10px; margin-bottom: 16px; }
+.round { width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--surface); font-size: 1.15rem; box-shadow: 3px 3px 0 var(--ink); }
+
+/* ---------- Beads ---------- */
+.beads { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 10px; }
+.bead { width: 56px; height: 56px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--b); color: var(--bf);
+  font: 800 1.5rem/1 var(--display); box-shadow: 3px 3px 0 var(--ink); transition: transform .2s; position: relative; }
+.bead:hover { transform: translateY(-4px); }
+.bead.on { transform: translateY(-8px) scale(1.1); }
+.bead.seen::after { content: ""; position: absolute; right: -9px; top: -13px; width: 20px; height: 26px; background: url(photos/heart.png) center / contain no-repeat; }
+.bead-note { margin-top: 26px; min-height: 8.8rem; padding: 18px 22px; max-width: 640px; }
+.bead-note .big { font: 800 3.2rem/1 var(--display); color: var(--heart); }
+.bead-note p { margin: 6px 0 0; font: 600 1.5rem/1.2 var(--hand); }
+.bead-count { color: var(--ink-soft); margin: 14px 0 0; font: 500 .85rem/1.2 var(--mono); }
+
+/* ---------- Prescriptions ---------- */
+.rxs { display: grid; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); gap: 18px; }
+.rx-card { position: relative; min-height: 172px; border: 2.5px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--c); color: var(--cf); isolation: isolate; box-shadow: 5px 5px 0 var(--ink); }
+.rx-body { padding: 16px 18px 48px; }
+.rx-body .rxmark { font: 800 2.4rem/1 var(--display); opacity: .9; margin-right: 6px; }
+.rx-body h3 { margin: 0 0 8px; font: 800 1.45rem/1.05 var(--display); letter-spacing: -.02em; }
+.rx-body p { margin: 0; font-size: .97rem; line-height: 1.4; }
+.rx-card canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; touch-action: none; cursor: crosshair; transition: opacity .5s; }
+.rx-card.done canvas { opacity: 0; pointer-events: none; }
+.rx-card .rv { position: absolute; right: 12px; bottom: 10px; z-index: 3; border: 2px solid #3B1016; border-radius: 999px; padding: 6px 14px; font-weight: 700; font-size: .82rem; background: #fff; color: #3B1016; }
+.rx-card.done .rv { display: none; }
+
+/* ---------- Referral / boarding pass ---------- */
+.next { display: grid; gap: 24px; }
+@media (min-width: 860px) { .next { grid-template-columns: 1fr 1.3fr; align-items: center; } }
+.next form { display: grid; gap: 14px; }
+.fld { display: grid; gap: 6px; }
+.fld label { font-weight: 700; }
+.fld input { font: inherit; padding: 14px 16px; border-radius: 12px; border: 2.5px solid var(--ink); background: var(--surface); color: var(--ink); width: 100%; box-shadow: 3px 3px 0 var(--ink); }
+.pass { display: grid; grid-template-columns: 1fr auto; overflow: hidden; }
+.pass-main { padding: 18px 20px; display: grid; gap: 14px; min-width: 0; }
+.pass-top { display: flex; justify-content: space-between; gap: 10px; font: 700 .7rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.pass-route { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+.pass-route b { font: 800 clamp(1.7rem, 7vw, 2.7rem)/1 var(--display); letter-spacing: -.03em; overflow-wrap: anywhere; }
+.pass-route .line { height: 3px; background: repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 14px); position: relative; }
+.pass-route .line::after { content: ""; position: absolute; left: 50%; top: 50%; width: 22px; height: 28px; transform: translate(-50%, -50%); background: var(--surface) url(photos/heart.png) center / 80% no-repeat; }
+.pass dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin: 0; }
+.pass dt { font: 700 .66rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.pass dd { margin: 0; font-weight: 700; }
+.pass-stub { width: 64px; border-left: 3px dashed var(--ink); background: var(--heart); display: grid; place-items: center; }
+.pass-stub i { width: 30px; height: 110px; background: repeating-linear-gradient(0deg, #fff 0 2px, transparent 2px 4px, #fff 4px 5px, transparent 5px 8px, #fff 8px 11px, transparent 11px 13px); }
+.fine { color: var(--ink-soft); font-size: .92rem; margin: 0; }
+
+/* ---------- Discharge letter ---------- */
+.letter { max-width: 720px; padding: clamp(22px, 5vw, 46px); transform: rotate(-.5deg); }
+.letter .hdr { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.letter p { font: 600 clamp(1.35rem, 4vw, 1.7rem)/1.3 var(--hand); margin: 0 0 14px; }
+.letter .sign { margin-top: 22px; color: var(--heart); }
+.end { margin-top: 56px; display: grid; gap: 14px; justify-items: start; }
+.end small { color: var(--ink-soft); }
+
+/* ---------- Overlay ---------- */
+.ov { position: fixed; inset: 0; z-index: 50; background: rgba(20, 6, 9, .9); display: grid; place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.ov[hidden] { display: none; }
+.lb { display: grid; gap: 12px; justify-items: center; max-width: min(92vw, 900px); }
+.lb img { max-height: 76vh; width: auto; max-width: 100%; border-radius: 4px; box-shadow: 0 20px 50px rgba(0, 0, 0, .5); }
+.lb p { margin: 0; color: #fff; font: 600 1.5rem/1.15 var(--hand); text-align: center; }
+.lb-nav { display: flex; gap: 12px; }
+.lb-nav .round, .x { background: #fff; color: #3B1016; }
+.x { position: absolute; top: max(14px, env(safe-area-inset-top, 0px)); right: max(14px, env(safe-area-inset-right, 0px)); }
+
+/* ---------- Toast, flash, floating hearts, confetti ---------- */
+.toast { position: fixed; z-index: 70; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px); transform: translate(-50%, 30px); opacity: 0;
+  background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 14px; font-weight: 700; max-width: 90vw; text-align: center; transition: .3s; pointer-events: none; border: 2px solid var(--heart); }
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.confetti { position: fixed; inset: 0; z-index: 65; pointer-events: none; width: 100%; height: 100%; }
+.flash { position: fixed; inset: 0; z-index: 90; background: #fff; opacity: 0; pointer-events: none; }
+.flash.go { animation: flash .7s ease-out; }
+@keyframes flash { 0% { opacity: .95; } 100% { opacity: 0; } }
+.fh { position: fixed; z-index: 80; pointer-events: none; width: 26px; height: 34px; background: url(photos/heart.png) center / contain no-repeat; transform: translate(-50%, -50%); animation: fh 1.1s ease-out forwards; }
+@keyframes fh { to { transform: translate(-50%, -300%) scale(1.5); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<header class="mon" id="mon" aria-label="Live heart monitor">
+  <div class="mon-heart" id="monHeart"><img src="photos/heart.png" alt=""></div>
+  <div class="mon-bpm"><span id="bpm">72</span><small>BPM</small></div>
+  <div class="mon-trace"><canvas id="ecg" aria-hidden="true"></canvas><div class="ward" id="ward">Ward: Admission</div></div>
+  <button class="snd" id="snd" type="button" aria-pressed="false">Beep: off</button>
+</header>
+
+<div class="page">
+  <section class="hero" id="top" data-bpm="76" data-ward="Ward: Admission">
+    <button class="bighrt" id="bigHeart" type="button" aria-label="Her heart. Tap it.">
+      <img id="bigHeartImg" src="photos/heart.png" alt="" width="212" height="280">
+      <span class="hint">tap it</span>
+    </button>
+    <div>
+      <h1>Happy birthday, Yashashwini.</h1>
+      <p>This is your patient file, updated for the occasion. Your heart is being monitored live at the top of the screen. Scroll slowly and watch what it does.</p>
+      <dl class="chart chunk">
+        <div><dt>Patient</dt><dd>Yashashwini K</dd></div>
+        <div><dt>Birthday</dt><dd>13 November</dd></div>
+        <div><dt>Height</dt><dd>5&prime;10&Prime;, confirmed. Still tall.</dd></div>
+        <div><dt>Chief complaint</dt><dd>Needs a trip. Soon.</dd></div>
+        <div><dt>Chronic conditions</dt><dd>Taylor Swift, Prabhas, shopping</dd></div>
+        <div><dt>Treating doctor</dt><dd>Dr. Husband (still in training)</dd></div>
+        <div><dt>Prognosis</dt><dd class="hand">Very good. Very loved.</dd></div>
+      </dl>
+      <div class="count" id="count" aria-live="off"><i></i><span id="countText">Birthday onset soon</span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="cases" data-bpm="80" data-ward="Ward: Case files">
+    <h2 class="h2">Case files</h2>
+    <p class="lede">Every trip we took is a case. Open one and the monitor shows what your heart was doing at the time. The first is already open.</p>
+    <div class="cases" id="caseList"></div>
+  </section>
+
+  <section class="sec" id="lab" data-bpm="78" data-ward="Ward: Stimulus lab">
+    <h2 class="h2">Stimulus lab</h2>
+    <p class="lede">Tap anything below. Watch the monitor at the top. Results are medically unreliable and emotionally accurate.</p>
+    <div class="lab">
+      <div class="stims" id="stims"></div>
+      <div class="reading chunk" id="reading" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="lookbook" data-bpm="146" data-ward="Ward: Fashion">
+    <h2 class="h2">Fashion ward</h2>
+    <p class="lede">Outfits pulled from your own photos. Rate them. The panel is strict.</p>
+    <div class="look-nav"><button class="round" id="lkPrev" type="button" aria-label="Previous look">&larr;</button><button class="round" id="lkNext" type="button" aria-label="Next look">&rarr;</button></div>
+    <div class="looks" id="looks" tabindex="0" aria-label="Lookbook"></div>
+  </section>
+
+  <section class="sec" id="beads" data-bpm="108" data-ward="Ward: Eleven beads">
+    <h2 class="h2">Eleven beads</h2>
+    <p class="lede">Eras Tour tradition: you swap friendship bracelets. This one spells your name. Tap every bead.</p>
+    <div class="beads" id="beadRow"></div>
+    <div class="bead-note chunk" id="beadNote" aria-live="polite"></div>
+    <p class="bead-count" id="beadCount"></p>
+  </section>
+
+  <section class="sec" id="rx" data-bpm="118" data-ward="Ward: Pharmacy">
+    <h2 class="h2">Prescriptions</h2>
+    <p class="lede">Doctor's orders, all valid today. Scratch each one with your finger or mouse. If that fails, press Reveal.</p>
+    <div class="rxs" id="rxRow"></div>
+  </section>
+
+  <section class="sec" id="next" data-bpm="92" data-ward="Ward: Referral">
+    <h2 class="h2">Referral</h2>
+    <p class="lede">The doctor recommends a trip. Where to? Type any place and get a boarding pass.</p>
+    <div class="next">
+      <form id="destForm" autocomplete="off">
+        <div class="fld">
+          <label for="dest">Referred to</label>
+          <input id="dest" name="dest" type="text" maxlength="24" placeholder="Any place in the world">
+        </div>
+        <button class="btn" type="submit">Print boarding pass</button>
+        <p class="fine">Screenshot the pass and send it to me. I'll start planning.</p>
+      </form>
+      <div class="pass chunk" id="pass" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="letter" data-bpm="64" data-ward="Ward: Discharge">
+    <h2 class="h2">Discharge summary</h2>
+    <p class="lede">The last page of the file.</p>
+    <div class="letter chunk" id="letterBox"></div>
+    <div class="end">
+      <button class="btn ink" id="defib" type="button">Defibrillate me</button>
+      <small>Press only if the patient's heart needs restarting. Made for Yashashwini, 13 November 2026.</small>
+    </div>
+  </section>
+</div>
+
+<div class="ov" id="ov" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+<div class="flash" id="flash" aria-hidden="true"></div>
+
+<script>
+/* =====================================================================
+   EDIT HERE. To add a trip: drop photos into photos/, photos/m/ (640px wide)
+   and photos/t/ (220px wide), then add a case to CASES below.
+   DIMS lists each full photo's width and height.
+   ===================================================================== */
+const DIMS = {"p01": [1280, 960], "p02": [720, 1280], "p03": [962, 1280], "p04": [960, 1280], "p05": [720, 1280], "p06": [960, 1280], "p07": [720, 1280], "p08": [627, 836], "p09": [960, 1280], "p10": [1280, 854], "p11": [1280, 854], "p12": [1280, 854], "p13": [1280, 960], "p14": [1280, 960], "p15": [1280, 960], "p16": [1280, 960], "p17": [960, 1280], "p18": [960, 1280], "p19": [960, 1280], "p20": [1280, 960], "p21": [960, 1280], "p22": [1280, 960], "p23": [960, 1280], "p24": [960, 1280], "p25": [960, 1280], "p26": [1280, 720], "p27": [720, 1280], "p28": [960, 1280]};
+
+const SITE = { birthdayIST: "2026-11-13T00:00:00+05:30", from: "Dr. Husband, Mr. Perfect (on probation)" };
+
+const CASES = [
+  { id: "fearless", name: "Ride Syndrome", era: "Fearless era", bpm: 118, a: "#F2B33D", af: "#2A1B00", song: "Fearless",
+    note: "Symptoms: wind in hair, a sunset in front, no desire to go home.",
+    photos: [
+      { s: "p07", c: "Symptom: cannot resist sunset plus bike." },
+      { s: "p05", c: "Golden hour. Vitals: golden." },
+      { s: "p04", c: "A helmet on a stump. Unrelated, but concerning." },
+      { s: "p21", c: "Fully loaded. Luggage: yes. Joy: also yes." },
+      { s: "p19", c: "Night ride. Core temperature scarf-dependent." }
+    ] },
+  { id: "folklore", name: "Waterfall Fever", era: "folklore era", bpm: 62, a: "#5C6E5B", af: "#FFFFFF", song: "cardigan",
+    note: "Patient finds the biggest rock available and sits on it. Waterfall does the rest.",
+    photos: [
+      { s: "p03", c: "Patient observed hugging a whole waterfall of calm." },
+      { s: "p24", c: "Has climbed the largest rock again." },
+      { s: "p27", c: "Scale reference: tiny humans." },
+      { s: "p25", c: "Subject last seen walking into a forest." },
+      { s: "p09", c: "Forest selfie, glasses on. Vitals stable." },
+      { s: "p01", c: "Heritage house. Patient: very photogenic." }
+    ] },
+  { id: "lover", name: "Palm Tree Delirium", era: "Lover era", bpm: 86, a: "#D43F7D", af: "#FFFFFF", song: "Lover",
+    note: "Sun, coconut palms, denim the colour of the sky.",
+    photos: [
+      { s: "p02", c: "Wall, water, palms. Prognosis: postcard." },
+      { s: "p08", c: "Leaning in. Chronic." },
+      { s: "p18", c: "Dancing detected. Sneakers: red. Prognosis: great." }
+    ] },
+  { id: "evermore", name: "Mist & Tea Recovery", era: "evermore era", bpm: 56, a: "#8A4F2F", af: "#FFFFFF", song: "willow",
+    note: "Hills in the clouds, tea gardens, a verandah, nowhere to be.",
+    photos: [
+      { s: "p20", c: "Beanie detected. Mist detected. Cover shoot suspected." },
+      { s: "p16", c: "Walking a tea garden like it's a runway. Diagnosis: model." },
+      { s: "p17", c: "Verandah. Phone. Smile. All normal." },
+      { s: "p22", c: "Bathrobe selfie. Resort mode: on." },
+      { s: "p23", c: "Room inspection. Passed." },
+      { s: "p26", c: "Viewpoint reached. Car parked. Tree: enormous." },
+      { s: "p28", c: "Hilltop. Wind. Patient unbothered." }
+    ] },
+  { id: "n1989", name: "Stone Corridor Calm", era: "1989 era", bpm: 66, a: "#4E9FCF", af: "#06233A", song: "Wildest Dreams",
+    note: "Resting in the shade of an old temple. Same year as Geethanjali, by the way.",
+    photos: [
+      { s: "p13", c: "Resting in a stone corridor. Pulse: slow and peaceful." }
+    ] },
+  { id: "speaknow", name: "The Aralli Katte Evening", era: "Speak Now era", bpm: 98, a: "#7447B0", af: "#FFFFFF", song: "Enchanted",
+    note: "A stage, a microphone, a very good outfit. Front row, both of us.",
+    photos: [
+      { s: "p10", c: "Husband explaining. Patient assessing." },
+      { s: "p11", c: "Arms crossed. Phone out. Both confident." },
+      { s: "p12", c: "Front row. Attention: 100%." }
+    ] },
+  { id: "midnights", name: "Late-Night Facial Expressions", era: "Midnights era", bpm: 90, a: "#232A66", af: "#FFFFFF", song: "Bejeweled",
+    note: "The faces you pull for the camera are my favourite photos. Please never stop.",
+    photos: [
+      { s: "p14", c: "Cobalt sweater. Hands in hair." },
+      { s: "p15", c: "Facial expression test: passed. Iconic." },
+      { s: "p06", c: "Jenga face. Concentration 100%. Hands steady." }
+    ] }
+];
+
+const STIMS = [
+  { t: "Taylor Swift", bpm: 128, s: "#D43F7D", sf: "#fff", h: "Singing detected", p: "Windows are up. Volume is up. Husband is quiet.", rx: "One full album, no skipping." },
+  { t: "Prabhas", bpm: 146, s: "#7447B0", sf: "#fff", h: "Acute Darling-itis", p: "Mild exposure to Baahubali. Pulse rises with every slow-motion entrance.", rx: "One movie night. Popcorn on me." },
+  { t: "Deepika Padukone", bpm: 134, s: "#232A66", sf: "#fff", h: "Style envy and height solidarity", p: "Mirror-checking in progress. Naina in glasses would approve.", rx: "One outfit refresh." },
+  { t: "Shopping", bpm: 158, s: "#F2B33D", sf: "#2A1B00", h: "Cart filling rapidly", p: "Heart rate peaks at the checkout. Bags are the husband's department.", rx: "One shopping spree. I carry." },
+  { t: "A waterfall", bpm: 54, s: "#5C6E5B", sf: "#fff", h: "Instant calm", p: "Shoulders dropped. Phone forgotten. Patient asks to stay five more minutes.", rx: "Five more minutes." },
+  { t: "Geethanjali", bpm: 96, s: "#4E9FCF", sf: "#06233A", h: "Mist, a hill town, a love story", p: "No time to waste on this ward. Tissues recommended.", rx: "One rewatch. Blanket included." },
+  { t: "Anand", bpm: 88, s: "#8A4F2F", sf: "#fff", h: "Life: big, not long", p: "Heart full. Plans: bigger. Excuses to stay home: none.", rx: "Do the thing. Today." },
+  { t: "Husband walks in", bpm: 164, s: "#E0383E", sf: "#fff", h: "Cause: unknown (it's me)", p: "Sudden spike when a certain person enters the room holding a surprise.", rx: "Hug. Repeat as needed." }
+];
+
+const LOOKS = [
+  { s: "p20", n: "Misty Moto", d: "Beanie, riding jacket, and a whole hillside as the backdrop.", pos: "10% 30%" },
+  { s: "p16", n: "Tea Estate Utility", d: "Black jacket, crossbody bag, sunglasses. Walked into a tea garden like it was a runway.", pos: "14% 40%" },
+  { s: "p18", n: "Denim & Blooms", d: "Blue knit, straight jeans, red sneakers, flowers on cue.", pos: "30% 50%" },
+  { s: "p17", n: "Verandah Wine", d: "A wine-coloured shirt and the best chair on the property.", pos: "50% 30%" },
+  { s: "p14", n: "Cobalt Crush", d: "Ribbed knit in the exact blue of her favourite sweater.", pos: "50% 25%" },
+  { s: "p10", n: "Stage Navy", d: "Smocked navy top and jeans. The speaker was upstaged.", pos: "96% 30%" },
+  { s: "p02", n: "Palm Denim", d: "Denim on denim in front of a lot of coconut trees.", pos: "70% 60%" }
+];
+const VERDICTS = ["10/10. No notes.", "The committee (me) approves.", "Serving. Obviously.", "Straight to the wishlist.", "Cover-worthy.", "Fashion week called."];
+
+const BEADS = [
+  ["Y", "Yes to every plan. Bike ride, waterfall, mystery trail. You say yes first and ask where we're going later."],
+  ["A", "Always the best dressed in the frame. Even on a muddy trail. Even next to a motorcycle."],
+  ["S", "Sunsets look better with you next to me. I checked every photo. It holds."],
+  ["H", "Home is wherever you sit down next to me, even if it's a rock in front of a waterfall."],
+  ["A", "Anand and Geethanjali. Two films about living fully, and you actually live that way."],
+  ["S", "Shopping. I'm in it for the bags, the trying on, and your face when you find the one."],
+  ["H", "Hilarious. The faces you pull for the camera are my favourite photos."],
+  ["W", "Wanderlust. You are always the first to ask where next."],
+  ["I", "Impossible to stay serious around you. Even during Jenga."],
+  ["N", "Nature's biggest fan. A forest over a mall, most days. Most."],
+  ["I", "Infinite chapters left. The next page is blank on purpose."]
+];
+const BEAD_COLORS = [["#E0383E", "#fff"], ["#2A43D6", "#fff"], ["#F2B33D", "#2A1B00"], ["#7447B0", "#fff"], ["#4E9FCF", "#06233A"]];
+
+const RXS = [
+  { t: "One shopping spree", d: "You pick the stores. I carry the bags and share opinions only when asked.", c: "#D43F7D", cf: "#fff" },
+  { t: "One full Taylor album", d: "Start to finish, windows up, no skipping. I will learn at least one chorus.", c: "#7447B0", cf: "#fff" },
+  { t: "Movie night, your pick", d: "Geethanjali, Anand, or a Prabhas film. You choose. I bring the snacks.", c: "#F2B33D", cf: "#2A1B00" },
+  { t: "Next destination", d: "You choose the place. I plan the route, pack the bags and charge the camera.", c: "#2A43D6", cf: "#fff" },
+  { t: "Golden hour photoshoot", d: "Unlimited retakes. Zero sighs. Directions taken seriously.", c: "#3F6B4A", cf: "#fff" },
+  { t: "One free “you were right”", d: "Redeemable on any topic. No questions asked.", c: "#E0383E", cf: "#fff" }
+];
+
+const LETTER = [
+  "Yashashwini,",
+  "{N} photos is not the full list. It's only the ones on my phone today. Somewhere in every one of them is the same thing: you looking at whatever is in front of us like it's the best thing you've seen all week.",
+  "Thank you for every waterfall rock, every muddy trail, every “one more photo” and every outfit change before a ride. Thank you for laughing at my jokes, especially the bad ones.",
+  "This file has room for more. The next trip, the next outfit, the next case. I'll keep adding pages for as long as you keep making them worth it.",
+  "Discharge date: never. Visiting hours: always.",
+  "Happy birthday, my darling."
+];
+
+/* ======================== app code ======================== */
+const PHOTO_COUNT = Object.keys(DIMS).length;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+const imgTag = (dir, s, alt, extra = "") => {
+  const d = DIMS[s] || [4, 3];
+  return `<img src="photos/${dir}${s}.jpg" alt="${alt}" width="${d[0]}" height="${d[1]}" ${extra}>`;
+};
+const rand = a => a[Math.floor(Math.random() * a.length)];
+
+/* toast */
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2800); }
+
+/* ------------ confetti (anatomical hearts + paper) ------------ */
+const heartImg = new Image(); heartImg.src = "photos/heart.png";
+const cv = $("#confetti"), cx = cv.getContext("2d");
+let parts = [], raf = 0;
+function sizeConfetti() { const d = Math.min(2, devicePixelRatio || 1); cv.width = innerWidth * d; cv.height = innerHeight * d; cx.setTransform(d, 0, 0, d, 0, 0); }
+addEventListener("resize", sizeConfetti); sizeConfetti();
+function confetti(x = innerWidth / 2, y = innerHeight / 3, n = 120) {
+  if (REDUCED) return;
+  const cols = ["#E0383E", "#2A43D6", "#F2B33D", "#7447B0", "#4E9FCF", "#FFFFFF"];
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, v = 4 + Math.random() * 9;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 6, w: 6 + Math.random() * 6, h: 4 + Math.random() * 5, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[i % cols.length], e: i % 4 === 0, life: 0 });
+  }
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function tick() {
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  parts = parts.filter(p => p.life < 150 && p.y < innerHeight + 30);
+  for (const p of parts) {
+    p.life++; p.vy += .28; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r);
+    if (p.e && heartImg.complete && heartImg.naturalWidth) { const s = p.w * 3; cx.drawImage(heartImg, -s * .38, -s / 2, s * .76, s); }
+    else { cx.fillStyle = p.c; cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); }
+    cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+  if (!parts.length) cx.clearRect(0, 0, innerWidth, innerHeight);
+}
+
+/* ------------ the monitor ------------ */
+const mon = { bpm: 76, base: 76, target: 76, boostUntil: 0, flat: false, phase: 0, sound: false };
+const ecg = $("#ecg"), ex = ecg.getContext("2d");
+let EW = 300, EH = 52, buf = [], dpr = 1;
+const SPEED = 130; // px per second
+const g = (x, c, s) => Math.exp(-((x - c) * (x - c)) / (2 * s * s));
+const wave = p => .12 * g(p, .14, .03) - .14 * g(p, .295, .012) + 1 * g(p, .325, .011) - .26 * g(p, .355, .012) + .26 * g(p, .6, .05);
+function sizeEcg() {
+  const r = ecg.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1);
+  EW = Math.max(60, Math.floor(r.width)); EH = Math.max(30, Math.floor(r.height));
+  ecg.width = EW * dpr; ecg.height = EH * dpr; ex.setTransform(dpr, 0, 0, dpr, 0, 0);
+  buf = new Array(EW).fill(0);
+  if (REDUCED) { let p = 0; for (let i = 0; i < EW; i++) { p += (1 / SPEED) * mon.bpm / 60; buf[i] = wave(p % 1); } drawEcg(); }
+}
+new ResizeObserver(sizeEcg).observe(ecg); sizeEcg();
+function drawEcg() {
+  ex.clearRect(0, 0, EW, EH);
+  const mid = EH * .62, amp = EH * .5;
+  ex.lineWidth = 2; ex.lineJoin = "round"; ex.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--mon-trace").trim() || "#FF5A62";
+  ex.shadowColor = ex.strokeStyle; ex.shadowBlur = 6;
+  ex.beginPath();
+  for (let i = 0; i < buf.length; i++) { const y = mid - buf[i] * amp; i ? ex.lineTo(i, y) : ex.moveTo(i, y); }
+  ex.stroke();
+}
+const heartEls = [$("#monHeart"), $("#bigHeartImg")];
+function thump() {
+  if (!REDUCED) heartEls.forEach(el => el && el.animate([{ transform: "scale(1)" }, { transform: "scale(1.22)" }, { transform: "scale(1)" }], { duration: 260, easing: "ease-out" }));
+  if (mon.sound && !mon.flat) beep(880, .06);
+}
+let actx = null;
+function beep(f, d) {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), gn = actx.createGain();
+    o.frequency.value = f; o.type = "sine"; gn.gain.value = .04; o.connect(gn); gn.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
+  } catch (e) {}
+}
+const bpmEl = $("#bpm"), wardEl = $("#ward");
+let last = performance.now(), shown = 0;
+function loop(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (mon.boostUntil && now > mon.boostUntil) { mon.boostUntil = 0; mon.target = mon.base; }
+  if (!mon.flat) mon.bpm += (mon.target - mon.bpm) * Math.min(1, dt * 1.4);
+  if (!REDUCED) {
+    const steps = Math.max(1, Math.round(SPEED * dt));
+    for (let i = 0; i < steps; i++) {
+      const before = Math.floor(mon.phase);
+      if (!mon.flat) mon.phase += (1 / SPEED) * mon.bpm / 60;
+      if (Math.floor(mon.phase) !== before) thump();
+      buf.push(mon.flat ? 0 : wave(mon.phase % 1)); buf.shift();
+    }
+    drawEcg();
+  }
+  const t = mon.flat ? "--" : String(Math.round(mon.bpm));
+  if (t !== shown) { shown = t; bpmEl.textContent = t; }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+function setBase(b, label) { mon.base = b; if (!mon.boostUntil) mon.target = b; if (label) wardEl.textContent = label; }
+function spike(b, ms, label) { mon.target = b; mon.boostUntil = performance.now() + ms; if (label) wardEl.textContent = label; }
+$("#snd").onclick = e => { mon.sound = !mon.sound; e.currentTarget.setAttribute("aria-pressed", mon.sound); e.currentTarget.textContent = "Beep: " + (mon.sound ? "on" : "off"); if (mon.sound) beep(660, .08); };
+
+/* ward follows the section in the middle of the screen */
+const wardIO = new IntersectionObserver(es => {
+  es.forEach(en => { if (en.isIntersecting) setBase(+en.target.dataset.bpm, en.target.dataset.ward); });
+}, { rootMargin: "-45% 0px -50% 0px" });
+$$("[data-bpm]").forEach(s => wardIO.observe(s));
+
+/* big heart */
+const HEART_LINES = ["Skipped a beat. Medically fine. Emotionally not.", "Heart rate: confused. You looked at me.", "That's my heart too. Please return it.", "Murmur detected: it says happy birthday.", "Thump. Thump. Still yours."];
+$("#bigHeart").addEventListener("click", () => {
+  spike(150, 3500, "Ward: Tapped"); toast(rand(HEART_LINES));
+  const r = $("#bigHeart").getBoundingClientRect(); confetti(r.left + r.width / 2, r.top + r.height / 2, 40);
+});
+
+/* countdown */
+const target = new Date(SITE.birthdayIST).getTime();
+let celebrated = false;
+const pad = n => String(n).padStart(2, "0");
+function updateCount() {
+  const diff = target - Date.now(), el = $("#countText");
+  if (diff > 0) { const s = Math.floor(diff / 1000); el.textContent = `Birthday onset in ${pad(Math.floor(s / 3600))}:${pad(Math.floor(s % 3600 / 60))}:${pad(s % 60)}`; }
+  else if (diff > -864e5) { el.textContent = "It's your birthday!"; if (!celebrated) { celebrated = true; setTimeout(() => { confetti(); spike(150, 5000, "Ward: Birthday"); }, 700); } }
+  else el.textContent = "Still your birthday month";
+}
+updateCount(); setInterval(updateCount, 1000);
+
+/* ------------ case files ------------ */
+const rots = [-2.2, 1.6, -1.2, 2.4, -2.6, 1.1, -1.7];
+function caseHTML(e, i) {
+  const open = i === 0;
+  return `<article class="case${open ? " open" : ""}" id="case-${e.id}" style="--a:${e.a};--af:${e.af}">
+    <h3 style="margin:0"><button class="case-btn" type="button" aria-expanded="${open}" aria-controls="pan-${e.id}">
+      <span class="case-name">${e.name}</span>
+      <span class="case-meta">Resting heart rate ${e.bpm} BPM / ${e.era} / ${e.photos.length} ${e.photos.length === 1 ? "scan" : "scans"}</span>
+      ${imgTag("t/", e.photos[0].s, "", 'class="case-thumb" loading="lazy"')}
+      <span class="case-plus" aria-hidden="true"></span>
+    </button></h3>
+    <div class="panel" id="pan-${e.id}"><div class="panel-in"><div class="panel-pad">
+      <p class="note">${e.note}</p>
+      <div class="pols">${e.photos.map((p, k) => `<button class="pol" type="button" data-case="${e.id}" data-i="${k}" style="--r:${rots[(i + k) % rots.length]}deg">
+        ${imgTag("m/", p.s, p.c, 'loading="lazy" decoding="async"')}<span>${p.c}</span></button>`).join("")}</div>
+      <p class="song"><a href="https://open.spotify.com/search/${encodeURIComponent(e.song + " Taylor Swift")}" target="_blank" rel="noopener">Play “${e.song}”</a></p>
+    </div></div></div></article>`;
+}
+$("#caseList").innerHTML = CASES.map(caseHTML).join("");
+$("#caseList").addEventListener("click", ev => {
+  const b = ev.target.closest(".case-btn");
+  if (b) {
+    const el = b.closest(".case"), open = !el.classList.contains("open");
+    el.classList.toggle("open", open); b.setAttribute("aria-expanded", open);
+    if (open) { const c = CASES.find(x => "case-" + x.id === el.id); spike(c.bpm + 6, 6000, "Case: " + c.name); }
+    return;
+  }
+  const p = ev.target.closest(".pol");
+  if (p) openLightbox(p.dataset.case, +p.dataset.i);
+});
+
+/* overlay + lightbox */
+const ov = $("#ov"); let lastFocus = null, lb = { c: null, i: 0 };
+function showOv(html) { lastFocus = document.activeElement; ov.innerHTML = html; ov.hidden = false; document.body.style.overflow = "hidden"; const f = $("button, a", ov); if (f) f.focus(); }
+function closeOv() { ov.hidden = true; ov.innerHTML = ""; document.body.style.overflow = ""; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+ov.addEventListener("click", ev => { if (ev.target === ov || ev.target.closest("[data-x]")) closeOv(); });
+function openLightbox(id, i) { lb = { c: CASES.find(e => e.id === id), i }; renderLb(true); }
+function renderLb(first) {
+  const e = lb.c, p = e.photos[lb.i], many = e.photos.length > 1;
+  const html = `<button class="round x" data-x="1" type="button" aria-label="Close">&times;</button>
+    <div class="lb" role="dialog" aria-modal="true" aria-label="${e.name} scan">${imgTag("", p.s, p.c)}<p>${p.c}</p>
+    ${many ? `<div class="lb-nav"><button class="round" type="button" data-step="-1" aria-label="Previous scan">&larr;</button><button class="round" type="button" data-step="1" aria-label="Next scan">&rarr;</button></div>` : ""}</div>`;
+  if (first) showOv(html); else { ov.innerHTML = html; const f = $("[data-step]", ov) || $(".x", ov); if (f) f.focus(); }
+  $$("[data-step]", ov).forEach(b => b.onclick = ev => { ev.stopPropagation(); step(+b.dataset.step); });
+}
+function step(d) { const n = lb.c.photos.length; lb.i = (lb.i + d + n) % n; renderLb(false); }
+addEventListener("keydown", ev => {
+  if (ov.hidden) return;
+  if (ev.key === "Escape") closeOv();
+  if (lb.c && $(".lb", ov)) { if (ev.key === "ArrowRight") step(1); if (ev.key === "ArrowLeft") step(-1); }
+});
+
+/* ------------ stimulus lab ------------ */
+$("#stims").innerHTML = STIMS.map((s, i) => `<button class="stim" type="button" aria-pressed="false" data-i="${i}" style="--s:${s.s};--sf:${s.sf}">${s.t}</button>`).join("");
+function reading(i) {
+  const s = STIMS[i];
+  $("#reading").innerHTML = i < 0
+    ? `<div class="big">--<small> BPM</small></div><h3>Waiting for a stimulus</h3><p>Pick one on the left and watch the monitor at the top of the screen.</p>`
+    : `<div class="big">${s.bpm}<small> BPM</small></div><h3>${s.h}</h3><p>${s.p}</p><p class="rx">Rx: ${s.rx}</p>`;
+}
+reading(-1);
+$("#stims").addEventListener("click", ev => {
+  const b = ev.target.closest(".stim"); if (!b) return;
+  $$(".stim").forEach(x => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true");
+  const i = +b.dataset.i, s = STIMS[i]; reading(i);
+  spike(s.bpm, 7000, "Stimulus: " + s.t);
+  if (s.bpm > 150) { const r = b.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top, 50); }
+});
+
+/* ------------ lookbook ------------ */
+$("#looks").innerHTML = LOOKS.map((l, i) => `<article class="look">
+  <div class="look-img"><img src="photos/m/${l.s}.jpg" alt="${l.n}" loading="lazy" style="object-position:${l.pos}"><span class="tag look-tag">Look ${i + 1}</span></div>
+  <h3>${l.n}</h3><p>${l.d}</p>
+  <div class="stars" role="group" aria-label="Rate ${l.n}">${[1, 2, 3, 4, 5].map(n => `<button class="star" type="button" data-n="${n}" aria-label="${n} stars">&#9733;</button>`).join("")}<span class="verdict" aria-live="polite"></span></div>
+</article>`).join("");
+$("#looks").addEventListener("click", ev => {
+  const s = ev.target.closest(".star"); if (!s) return;
+  const gp = s.closest(".stars"); $$(".star", gp).forEach(x => x.classList.add("on"));
+  $(".verdict", gp).textContent = rand(VERDICTS);
+  if (+s.dataset.n < 5) toast("Rating system adjusted to match reality.");
+});
+const lkStep = d => { const w = $(".look").getBoundingClientRect().width + 18; $("#looks").scrollBy({ left: d * w, behavior: REDUCED ? "auto" : "smooth" }); };
+$("#lkPrev").onclick = () => lkStep(-1); $("#lkNext").onclick = () => lkStep(1);
+
+/* ------------ beads ------------ */
+const seen = new Set();
+$("#beadRow").innerHTML = BEADS.map((b, i) => { const c = BEAD_COLORS[i % BEAD_COLORS.length];
+  return `<button class="bead" type="button" data-i="${i}" style="--b:${c[0]};--bf:${c[1]}" aria-label="Bead ${i + 1}, letter ${b[0]}">${b[0]}</button>`; }).join("");
+$("#beadNote").innerHTML = `<div class="big">?</div><p>Tap a bead to read what it says.</p>`;
+$("#beadCount").textContent = `0 of ${BEADS.length} beads read`;
+$("#beadRow").addEventListener("click", ev => {
+  const b = ev.target.closest(".bead"); if (!b) return;
+  $$(".bead").forEach(x => x.classList.remove("on")); b.classList.add("on");
+  const i = +b.dataset.i; seen.add(i); b.classList.add("seen");
+  $("#beadNote").innerHTML = `<div class="big">${BEADS[i][0]}</div><p>${BEADS[i][1]}</p>`;
+  $("#beadCount").textContent = `${seen.size} of ${BEADS.length} beads read`;
+  spike(112 + seen.size * 3, 3000);
+  if (seen.size === BEADS.length) { $("#beadCount").textContent = "All eleven read. The string still has room for more."; const r = b.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top, 90); }
+});
+
+/* ------------ prescriptions (scratch) ------------ */
+$("#rxRow").innerHTML = RXS.map(c => `<div class="rx-card" style="--c:${c.c};--cf:${c.cf}">
+  <div class="rx-body"><h3><span class="rxmark">Rx</span>${c.t}</h3><p>${c.d}</p></div><canvas aria-hidden="true"></canvas><button class="rv" type="button">Reveal</button></div>`).join("");
+function setupScratch(card) {
+  const c = $("canvas", card), gx = c.getContext("2d");
+  let d = 1, down = false, moves = 0, w = 0, h = 0, lw = 0;
+  const paint = () => {
+    const r = card.getBoundingClientRect(); w = r.width; h = r.height; d = Math.min(2, devicePixelRatio || 1);
+    c.width = w * d; c.height = h * d; gx.setTransform(d, 0, 0, d, 0, 0); gx.globalCompositeOperation = "source-over";
+    const gr = gx.createLinearGradient(0, 0, w, h); gr.addColorStop(0, "#E8E0E2"); gr.addColorStop(.5, "#FFFFFF"); gr.addColorStop(1, "#CBBFC3");
+    gx.fillStyle = gr; gx.fillRect(0, 0, w, h);
+    gx.strokeStyle = "rgba(224,56,62,.28)"; gx.lineWidth = 2;
+    for (let x = -h; x < w; x += 14) { gx.beginPath(); gx.moveTo(x, h); gx.lineTo(x + h, 0); gx.stroke(); }
+    gx.fillStyle = "#3B1016"; gx.textAlign = "center"; gx.textBaseline = "middle";
+    gx.font = "800 22px Bricolage Grotesque, system-ui, sans-serif"; gx.fillText("Rx: scratch to fill", w / 2, h / 2 - 8);
+    gx.font = "500 13px Figtree, system-ui, sans-serif"; gx.fillText("use your finger", w / 2, h / 2 + 16);
+  };
+  const reveal = () => { if (card.classList.contains("done")) return; card.classList.add("done"); const r = card.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top + r.height / 2, 60); spike(130, 3000); };
+  const cleared = () => { const dt = gx.getImageData(0, 0, c.width, c.height).data; let n = 0, t = 0; for (let i = 3; i < dt.length; i += 64) { t++; if (dt[i] === 0) n++; } return n / t; };
+  const scratch = ev => { const r = c.getBoundingClientRect(); gx.globalCompositeOperation = "destination-out"; gx.beginPath(); gx.arc(ev.clientX - r.left, ev.clientY - r.top, 20, 0, 7); gx.fill(); if (++moves % 6 === 0 && cleared() > .5) reveal(); };
+  c.addEventListener("pointerdown", ev => { down = true; c.setPointerCapture(ev.pointerId); scratch(ev); });
+  c.addEventListener("pointermove", ev => { if (down) scratch(ev); });
+  const up = () => { down = false; }; c.addEventListener("pointerup", up); c.addEventListener("pointercancel", up);
+  $(".rv", card).addEventListener("click", reveal);
+  new ResizeObserver(() => { if (!card.classList.contains("done") && Math.abs(card.clientWidth - lw) > 1) { lw = card.clientWidth; paint(); } }).observe(card);
+  paint();
+}
+$$(".rx-card").forEach(setupScratch);
+
+/* ------------ referral / boarding pass ------------ */
+function renderPass(dest, real) {
+  const dd = (dest || "Anywhere you say").toUpperCase().replace(/</g, "");
+  $("#pass").innerHTML = `<div class="pass-main">
+      <div class="pass-top"><span>Darling Air</span><span>${real ? "Boarding pass" : "Sample pass"}</span></div>
+      <div class="pass-route"><b>US</b><span class="line" aria-hidden="true"></span><b>${dd}</b></div>
+      <dl><div><dt>Passenger</dt><dd>Yashashwini K</dd></div><div><dt>Gate</dt><dd>5′10″</dd></div>
+      <div><dt>Seat</dt><dd>1A, extra legroom</dd></div><div><dt>Boarding</dt><dd>Whenever you say</dd></div></dl>
+    </div><div class="pass-stub" aria-hidden="true"><i></i></div>`;
+}
+const saved = store.get("yk-dest"); renderPass(saved, !!saved); if (saved) $("#dest").value = saved;
+$("#destForm").addEventListener("submit", ev => {
+  ev.preventDefault();
+  const v = $("#dest").value.trim().slice(0, 24);
+  if (!v) { toast("Type a place first. Anywhere at all."); $("#dest").focus(); return; }
+  store.set("yk-dest", v); renderPass(v, true); spike(140, 4000, "Referral: " + v);
+  const r = $("#pass").getBoundingClientRect(); confetti(r.left + r.width / 2, r.top, 80);
+  toast("Boarding pass printed. Screenshot it for me.");
+});
+
+/* ------------ discharge letter + defib ------------ */
+$("#letterBox").innerHTML = `<div class="hdr"><span class="tag">Discharge summary</span><span class="tag" style="background:var(--heart);color:#fff">Patient: Yashashwini K</span></div>`
+  + LETTER.map(p => `<p>${p.replace("{N}", PHOTO_COUNT)}</p>`).join("") + `<p class="sign">${SITE.from}</p>`;
+let defibbing = false;
+$("#defib").onclick = () => {
+  if (defibbing) return; defibbing = true;
+  const btn = $("#defib"); btn.disabled = true;
+  mon.flat = true; wardEl.textContent = "Ward: Flatline"; toast("Patient unresponsive. Charging...");
+  if (mon.sound) beep(440, 1.2);
+  setTimeout(() => toast("CLEAR!"), 1400);
+  setTimeout(() => {
+    $("#flash").classList.remove("go"); void $("#flash").offsetWidth; $("#flash").classList.add("go");
+    mon.flat = false; mon.bpm = 40; mon.target = 175; mon.boostUntil = performance.now() + 6000; wardEl.textContent = "Ward: Restarted";
+    const r = btn.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top, 180);
+    toast("Heart restarted. It was you the whole time.");
+  }, 2100);
+  setTimeout(() => { defibbing = false; btn.disabled = false; }, 4500);
+};
+
+/* ------------ floating hearts on tap ------------ */
+addEventListener("pointerdown", ev => {
+  if (REDUCED || ev.target.closest("canvas")) return;
+  const h = document.createElement("span"); h.className = "fh"; h.style.left = ev.clientX + "px"; h.style.top = ev.clientY + "px";
+  document.body.appendChild(h); setTimeout(() => h.remove(), 1100);
+});
+</script>
