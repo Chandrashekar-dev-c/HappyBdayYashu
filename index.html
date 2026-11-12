@@ -61,21 +61,27 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;letter-spacing:-.01em}
 .window::before{left:50%;top:0;bottom:0;width:5px;transform:translateX(-50%)}
 .window::after{top:50%;left:0;right:0;height:5px;transform:translateY(-50%)}
 .shelf{position:absolute;right:5%;top:23%;width:46%;height:2.6%;background:#C98A5E;border-radius:4px;box-shadow:0 5px 0 #A86E47}
-.cab{position:absolute;right:5%;top:52%;width:32%;height:17.5%;background:#E9A87E;border-radius:8px 8px 4px 4px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+.cab{position:absolute;right:5%;top:44%;width:28%;height:25%;background:#E9A87E;border-radius:8px 8px 4px 4px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
 .prop{position:absolute;transition:transform .2s;z-index:2}
 .prop:active{transform:scale(.9)}
 .prop svg{display:block;width:100%;height:auto}
 .prop.rec{right:30%;top:10.5%;width:18%}
 .prop.helm{right:8%;top:11%;width:14%}
-.prop.tv{right:6%;top:35%;width:30%}
+.prop.tv{right:6%;top:27.5%;width:26%}
 .who{position:absolute;bottom:3%;aspect-ratio:3/5;pointer-events:none;z-index:3}
 .who svg{display:block;width:100%;height:100%;overflow:visible}
 .who svg *{pointer-events:visiblePainted}
 .who .chibi-svg{cursor:pointer}
 .who.yashu{left:26%;height:57%}
-.who.chandru{left:56%;height:59%}
+.who.chandru{left:58%;height:54%}
 .who.pranshu{left:-3%;height:54%}
 .bob{animation:bob 2.8s ease-in-out infinite}
+.who.pranshu.run{z-index:4;animation:prun 13s ease-in-out infinite,phop .3s ease-in-out infinite alternate}
+@keyframes prun{0%,10%{left:-3%;scale:1 1}42%,50%{left:33%;scale:1 1}52%,60%{left:33%;scale:-1 1}92%,100%{left:-3%;scale:-1 1}}
+@keyframes phop{to{translate:0 -3%}}
+.balloon{position:absolute;left:58%;top:-26%;font-size:1.9rem;line-height:1;animation:bal 1.8s ease-in-out infinite alternate;pointer-events:none}
+.balloon::after{content:"";position:absolute;left:47%;top:92%;width:1.5px;height:110%;background:#9a8a9a}
+@keyframes bal{to{transform:rotate(9deg) translateY(-4px)}}
 .bob2{animation:bob 3.3s ease-in-out infinite -1s}
 @keyframes bob{50%{transform:translateY(-2.5%)}}
 .dance{animation:dance .42s ease-in-out infinite alternate!important}
@@ -275,10 +281,24 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;letter-spacing:-.01em}
 .seg button{flex:1;padding:9px 4px;border-radius:999px;font-weight:800;font-size:.88rem}
 .seg button.on{background:var(--pink);color:#fff}
 .lbl{font:800 .72rem/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:20px 0 8px}
-.ocs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ocs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.oc small{overflow-wrap:anywhere}
 .oc{background:#fff;border-radius:20px;padding:8px 6px 10px;box-shadow:0 5px 0 #EAD3DD;text-align:center}
-.oc .ov2{height:96px;margin:0 auto;aspect-ratio:3/5}
+.oc .ov2{height:96px;margin:0 auto;display:flex;justify-content:center}
+.oc .ov2 span{height:100%;aspect-ratio:3/5.2}
 .oc .ov2 svg{width:100%;height:100%;display:block}
+.cheerjump{animation:cj .9s ease-in-out infinite}
+@keyframes cj{0%,100%{translate:0 0}30%{translate:0 -6%}}
+.squad{display:grid;grid-template-columns:64px 1fr;align-items:end;gap:8px;margin-top:10px}
+.squad .sq{height:100px}
+.squad .sq svg{width:100%;height:100%;display:block}
+.squad .sqb{align-self:center;background:#fff;border-radius:16px;padding:9px 12px;font:600 .88rem/1.25 var(--disp);box-shadow:0 4px 0 #EAD3DD;min-height:44px}
+.helpbtn{display:block;margin:10px auto 0;padding:10px 18px;border-radius:999px;background:#FFE3EC;color:var(--rose);font-weight:800;box-shadow:0 4px 0 #F4C6D6}
+.helpbtn[disabled]{opacity:.5}
+.jump{animation:spin .55s ease}
+.songs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 14px}
+.songs a{padding:8px 12px;border-radius:999px;background:#E9F9EF;color:#127A3E;font-weight:800;font-size:.85rem;text-decoration:none}
+.spot{width:100%;height:352px;border:0;border-radius:14px;margin-top:10px;background:#f3f3f3}
 .oc small{display:block;font:700 .78rem/1.15 var(--disp);margin-top:4px}
 .oc em{display:block;font-style:normal;font-size:.68rem;color:var(--soft);line-height:1.2;margin-top:2px}
 .oc.sel{box-shadow:0 0 0 3px var(--pink),0 5px 0 #EAD3DD}
@@ -424,13 +444,14 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;letter-spacing:-.01em}
 <section class="screen" id="sWard">
   <p class="eyebrow">Wardrobe & photo booth</p>
   <h2 class="h2">Dress up Yashu</h2>
+  <p class="lede" style="margin-bottom:0">Whatever she wears, Mr Not-Perfect matches. Obviously.</p>
   <div class="stage booth sc-room" id="booth" style="margin-top:14px">
     <span class="stamp">Pocket Yashu · 13 Nov</span>
     <div class="who yashu bob" id="bYashu"></div>
     <div class="who chandru bob2" id="bChandru"></div>
   </div>
   <p class="tiny">Strike a pose, then take a screenshot to keep it.</p>
-  <div class="seg" id="accSeg"><button type="button" data-a="specs">👓 Glasses</button><button type="button" data-a="sun">🕶️ Sunnies</button><button type="button" data-a="none">None</button></div>
+  <div class="seg" id="accSeg"><button type="button" data-a="none">No glasses</button><button type="button" data-a="sun">🕶️ Sunnies</button><button type="button" data-a="specs">👓 Specs</button></div>
   <div class="seg" id="faceSeg"><button type="button" data-f="smile">🙂</button><button type="button" data-f="happy">😄</button><button type="button" data-f="wink">😉</button><button type="button" data-f="pout">😗</button><button type="button" data-f="silly">😜</button></div>
   <p class="lbl">Background</p>
   <div class="bgs" id="bgs"></div>
@@ -453,7 +474,7 @@ h1,h2,h3{font-family:var(--disp);font-weight:600;margin:0;letter-spacing:-.01em}
 <section class="screen" id="sFinale">
   <p class="eyebrow center">All eight worlds cleared</p>
   <h2 class="h2 center">Happy birthday, Yashu!</h2>
-  <p class="lede center">Everybody came.</p>
+  <p class="lede center">Everybody came. Even baby Jaanu.</p>
   <div class="stage sc-party party-stage" id="partyStage"></div>
   <div class="card" style="margin-top:16px;text-align:center">
     <p class="eyebrow">Unlocked</p>
@@ -525,10 +546,10 @@ const WORLDS = [
     how:"The magician shuffles three cards. Keep your eyes on the Queen of Hearts and find her 3 times out of 5." },
   { id:"silly", name:"Silly Faces", emoji:"🤪", game:"jenga", outfit:"blue", photos:["p32","p33","p34","p35"],
     note:"Your funny faces are my favourite photos. Please never stop.",
-    how:"Pull 7 Jenga blocks by tapping when the marker is in the green. Then copy 4 funny faces." },
+    how:"Pull 7 Jenga blocks by tapping when the marker is in the green. Then match 4 of her real faces to emojis." },
   { id:"family", name:"Family & Home", emoji:"🏡", game:"cake", outfit:"kurta", photos:["p36","p37","p38","p39"],
     note:"The people who made you, the little one who adores you, and all of us cheering for you.",
-    how:"Padma, Appu, Dad and Harshitha each drop something for your cake. Catch it all on the plate, then blow out the candles with Pranshu." }
+    how:"Mom, Dad, Appu and Harshitha (with baby Jaanu) each drop something for your cake. Catch it all on the plate, then blow out the candles with Pranshu." }
 ];
 const BRIDE = ["p40","p41","p42","p43","p44","p45","p46"];
 
@@ -560,28 +581,72 @@ const LETTER = [
 ];
 
 /* ---------------- characters ---------------- */
-const YASHU = { skin:"#C68B67", hair:"long", hairC:"#1E1515", earrings:true };
-const CHANDRU = { skin:"#A9714F", hair:"curly", hairC:"#141010", glasses:"specs", beard:true, top:"#8E949E", bottom:"#B7A27A", bpattern:"camo", btype:"pants", shoes:"#22222A" };
-const DAD = { skin:"#9A6346", hair:"short", hairC:"#2A2522", mustache:true, top:"#F4F1F6", pattern:"check", bottom:"#2B2B31", btype:"pants", shoes:"#6B4A3A" };
-const PADMA = { skin:"#B27A58", hair:"bun", hairC:"#1C1616", top:"#6EA62F", btype:"saree", border:"#8C2338", gold:"#E0AE48", shoes:"#E0AE48", bindi:true, earrings:true };
-const APPU = { skin:"#C68B67", hair:"bob", hairC:"#1E1515", top:"#F7CBD8", bottom:"#3C4B6D", btype:"pants", shoes:"#FFFFFF", earrings:true };
-const HARSHITHA = { skin:"#C08460", hair:"long", hairC:"#1A1414", top:"#2E8C8A", bottom:"#2E8C8A", btype:"kurta", dupatta:"#F2C14E", shoes:"#E8C27A", bindi:true, earrings:true };
-const PRANSHU = { skin:"#C9906B", hair:"pig", hairC:"#1E1515", top:"#FFFFFF", bottom:"#FF8FB0", btype:"skirt", shoes:"#FFFFFF", kid:true, bindi:true };
+const YASHU = { eyeC:"#7A4A2A", hair:"yashu", skin:"#C98F6B", hairC:"#1B1212", hairHL:"#4E342B", earrings:true };
+const CHANDRU = { male:true, hair:"chandru", skin:"#A06A4A", hairC:"#1A1210", hairHL:"#4A3328", glasses:"specs", beard:true };
+const DAD = { male:true, hair:"dad", skin:"#93603F", hairC:"#2A2522", hairHL:"#9A948E", mustache:true, top:"#F4F1F6", pattern:"check", over:"collar", bottom:"#2B2B31", btype:"pants", shoes:"#6B4A3A" };
+const PADMA = { hair:"mom", skin:"#B57B58", hairC:"#1C1616", hairHL:"#6A5C56", top:"#6EA62F", btype:"saree", border:"#8C2338", gold:"#E0AE48", shoes:"#E0AE48", bindi:"big", jhumka:true, necklace:true };
+const APPU = { hair:"appu", skin:"#C98F6B", hairC:"#1E1515", hairHL:"#4E342B", top:"#F7CBD8", bottom:"#3C4B6D", btype:"pants", shoes:"#FFFFFF", earrings:true };
+const HARSHITHA = { hair:"harshitha", skin:"#BD8460", hairC:"#1A1414", hairHL:"#4A3530", top:"#2E8C8A", bottom:"#2E8C8A", btype:"kurta", dupatta:"#F2C14E", shoes:"#E8C27A", bindi:true, earrings:true, baby:true };
+const PRANSHU = { hair:"pranshu", skin:"#C9906B", hairC:"#1E1515", hairHL:"#4E342B", top:"#FFFFFF", text:"♥", textC:"#FF5C8A", bottom:"#FF8FB0", btype:"skirt", shoes:"#FFFFFF", kid:true, bindi:true };
 
+/* Her outfits. "him" is the matching look Mr Not-Perfect switches into. */
 const OUTFITS = {
-  pink:   { name:"Pink knit", top:"#F6B3C6", pattern:"knit", bottom:"#9DC1E4", btype:"pants", shoes:"#FFFFFF" },
-  stripes:{ name:"Sunset stripes", top:"#F8C3B0", pattern:"stripes", bottom:"#7DAEE0", btype:"shorts", shoes:"#FFFFFF", from:"ride" },
-  hoodie: { name:"Map hoodie", top:"#39445F", pattern:"map", bottom:"#BCD0B0", btype:"pants", shoes:"#D2B08C", from:"water" },
-  beanie: { name:"Mist rider", top:"#25262E", pattern:"jacket", bottom:"#30313A", btype:"pants", shoes:"#46464F", hat:"#9E8B57", from:"hills" },
-  polka:  { name:"Polka dots", top:"#A7C3E6", pattern:"dots", bottom:"#C3D8EE", btype:"pants", shoes:"#F3EEE4", from:"palms" },
-  white:  { name:"Temple whites", top:"#FBF8F1", pattern:"smock", bottom:"#8DAFD5", btype:"pants", shoes:"#FFFFFF", from:"stones" },
-  navy:   { name:"Magic assistant", top:"#2F3D5B", pattern:"smock", bottom:"#4E6E9E", btype:"pants", shoes:"#FFFFFF", from:"magic" },
-  blue:   { name:"Cobalt sweater", top:"#2E5AC2", pattern:"knit", bottom:"#8DB0D6", btype:"pants", shoes:"#FFFFFF", from:"silly" },
-  kurta:  { name:"Purple kurta", top:"#6B2DB5", bottom:"#6B2DB5", btype:"kurta", shoes:"#E8C27A", dupatta:"#9B8AA8", from:"family" },
-  maroon: { name:"Packing day", top:"#8C2E45", bottom:"#4E7B48", btype:"pants", shoes:"#FFFFFF", day:2 },
-  flower: { name:"Flower garden", top:"#7EA6D8", pattern:"knit", bottom:"#82A9D6", btype:"pants", shoes:"#E2384B", day:4 },
-  saree:  { name:"Silk saree", top:"#FFF5E3", btype:"saree", border:"#A8243A", gold:"#E0AE48", shoes:"#E0AE48", finale:true },
-  lehenga:{ name:"Sequin lehenga", top:"#EBDFC8", pattern:"sparkle", btype:"lehenga", shoes:"#EBDFC8", finale:true }
+  pink:     { name:"Pink knit", top:"#F6B3C6", pattern:"knit", bottom:"#9DC1E4", btype:"pants", shoes:"#FFFFFF",
+              him:{ top:"#F6B3C6", bottom:"#7E828C", btype:"pants", shoes:"#2B2B33" } },
+  floral:   { name:"Floral sundress", top:"#FFF4F0", pattern:"floral", btype:"dress", shoes:"#F3C9A8",
+              him:{ top:"#FFF4F0", pattern:"floral", over:"collar", bottom:"#D9C7A8", btype:"shorts", shoes:"#F3C9A8" } },
+  lover:    { name:"Lover pastel", top:"#F7C6E0", pattern:"hearts", btype:"dress", shoes:"#FFFFFF",
+              him:{ top:"#D7C6F7", pattern:"hearts", over:"collar", bottom:"#FFFFFF", btype:"pants", shoes:"#FFFFFF" } },
+  denim:    { name:"Denim day", top:"#6F93C7", pattern:"denim", over:"jacket", bottom:"#2F4E7C", btype:"pants", shoes:"#FFFFFF",
+              him:{ top:"#6F93C7", pattern:"denim", over:"jacket", bottom:"#25252B", btype:"pants", shoes:"#FFFFFF" } },
+  red:      { name:"Red era", top:"#D6293B", bottom:"#1E1E24", btype:"shorts", shoes:"#1E1E24", boots:true, lips:true,
+              him:{ top:"#D6293B", bottom:"#1E1E24", btype:"pants", shoes:"#1E1E24" } },
+  cardigan: { name:"Folklore cardigan", top:"#E9DCC4", pattern:"knit", over:"cardigan", inner:"#FFFFFF", bottom:"#7C6A58", btype:"skirt", shoes:"#5A4636",
+              him:{ top:"#E9DCC4", pattern:"knit", over:"cardigan", inner:"#FFFFFF", bottom:"#6B5A4A", btype:"pants", shoes:"#5A4636" } },
+  pjs:      { name:"Cosy pyjamas", top:"#BFD8F7", pattern:"stars", bottom:"#BFD8F7", bpattern:"stars", btype:"pants", shoes:"#FFD1E0",
+              him:{ top:"#BFD8F7", pattern:"stars", bottom:"#BFD8F7", bpattern:"stars", btype:"pants", shoes:"#FFD1E0" } },
+  anarkali: { name:"Haldi anarkali", top:"#F6C531", pattern:"floral", btype:"gown", dupatta:"#FF8FA8", shoes:"#E0AE48", bindi:true, jhumka:true,
+              him:{ top:"#F6C531", over:"band", bottom:"#FFFFFF", btype:"kurta", shoes:"#C08A4A" } },
+  raincoat: { name:"Rainy day", top:"#FFD23F", hood:"#FFD23F", over:"raincoat", bottom:"#3E5F8F", btype:"pants", shoes:"#E2384B", boots:true,
+              him:{ top:"#FFD23F", hood:"#FFD23F", over:"raincoat", bottom:"#3E5F8F", btype:"pants", shoes:"#2B2B33", boots:true } },
+  party:    { name:"Little black dress", top:"#1E1C24", pattern:"sparkle", btype:"dress", shoes:"#1E1C24", lips:true,
+              him:{ top:"#1E1C24", over:"suit", tie:"bow", bottom:"#1E1C24", btype:"pants", shoes:"#111111" } },
+  stripes:  { name:"Sunset stripes", top:"#F8C3B0", pattern:"stripes", bottom:"#7DAEE0", btype:"shorts", shoes:"#FFFFFF", from:"ride",
+              him:{ top:"#D9434F", pattern:"vstripes", over:"collar", bottom:"#4A6E9C", btype:"pants", shoes:"#FFFFFF" } },
+  hoodie:   { name:"Map hoodie", top:"#39445F", pattern:"map", over:"hoodie", bottom:"#BCD0B0", btype:"pants", shoes:"#D2B08C", from:"water",
+              him:{ top:"#C9B6A0", pattern:"check", over:"collar", bottom:"#9C8E6B", bpattern:"camo", btype:"pants", shoes:"#D2B08C" } },
+  beanie:   { name:"Mist rider", top:"#25262E", over:"jacket", bottom:"#30313A", btype:"pants", shoes:"#46464F", hat:"#9E8B57", from:"hills",
+              him:{ top:"#25262E", over:"jacket", bottom:"#30313A", btype:"pants", shoes:"#46464F", hat:"#3C3C44" } },
+  polka:    { name:"Polka dots", top:"#A7C3E6", pattern:"dots", bottom:"#C3D8EE", btype:"pants", shoes:"#F3EEE4", from:"palms",
+              him:{ top:"#A7C3E6", pattern:"dots", over:"collar", bottom:"#C9C3B8", btype:"pants", shoes:"#F3EEE4" } },
+  white:    { name:"Temple whites", top:"#FBF8F1", pattern:"smock", bottom:"#8DAFD5", btype:"pants", shoes:"#FFFFFF", from:"stones",
+              him:{ top:"#F7F8FA", over:"collar", bottom:"#6F8FBF", btype:"pants", shoes:"#22222A" } },
+  navy:     { name:"Magic assistant", top:"#2F3D5B", pattern:"smock", bottom:"#4E6E9E", btype:"pants", shoes:"#FFFFFF", from:"magic",
+              him:{ top:"#EDEAE4", text:"ODIN", textC:"#E2384B", bottom:"#1E1E24", btype:"pants", shoes:"#22222A" } },
+  blue:     { name:"Cobalt sweater", top:"#2E5AC2", pattern:"knit", bottom:"#8DB0D6", btype:"pants", shoes:"#FFFFFF", from:"silly",
+              him:{ top:"#283A6B", pattern:"knit", bottom:"#C9B38A", btype:"pants", shoes:"#22222A" } },
+  kurta:    { name:"Purple kurta", top:"#6B2DB5", bottom:"#6B2DB5", btype:"kurta", shoes:"#E8C27A", dupatta:"#9B8AA8", bindi:true, jhumka:true, from:"family",
+              him:{ top:"#5B2A9E", over:"band", bottom:"#F4EFE6", btype:"kurta", shoes:"#C08A4A" } },
+  midnights:{ name:"Midnights", top:"#25306B", pattern:"stars", btype:"dress", shoes:"#25306B", day:0,
+              him:{ top:"#25306B", pattern:"stars", over:"collar", bottom:"#1E1E24", btype:"pants", shoes:"#22222A" } },
+  pinkhalf: { name:"Pink half-saree", top:"#F48FB1", bottom:"#F7C1D6", bpattern:"sparkle", btype:"lehenga", dupatta:"#E0AE48", shoes:"#E0AE48", bindi:true, jhumka:true, day:1,
+              him:{ top:"#F48FB1", over:"band", bottom:"#FFF5E3", btype:"kurta", shoes:"#C08A4A" } },
+  maroon:   { name:"Packing day", top:"#8C2E45", bottom:"#4E7B48", btype:"pants", shoes:"#FFFFFF", day:2,
+              him:{ top:"#8C2E45", over:"hoodie", bottom:"#C9B38A", bpattern:"camo", btype:"pants", shoes:"#22222A" } },
+  golden:   { name:"Golden hour", top:"#FFD36B", pattern:"floral", btype:"dress", shoes:"#F3E6CF", day:3,
+              him:{ top:"#FFFDF5", over:"collar", bottom:"#D9C7A8", btype:"pants", shoes:"#F3E6CF" } },
+  flower:   { name:"Flower garden", top:"#7EA6D8", pattern:"knit", bottom:"#82A9D6", btype:"pants", shoes:"#E2384B", day:4,
+              him:{ top:"#9AA0AA", bottom:"#B7A27A", bpattern:"camo", btype:"pants", shoes:"#E2384B" } },
+  snow:     { name:"Snowy knit", top:"#F5F2EC", pattern:"knit", bottom:"#7C8698", btype:"pants", shoes:"#8A6A50", boots:true, hat:"#E2384B", day:5,
+              him:{ top:"#F5F2EC", pattern:"knit", bottom:"#3B4252", btype:"pants", shoes:"#8A6A50", boots:true, hat:"#E2384B" } },
+  saree:    { name:"Silk saree", top:"#FFF5E3", btype:"saree", border:"#A8243A", gold:"#E0AE48", shoes:"#E0AE48", bindi:true, jhumka:true, necklace:true, finale:true,
+              him:{ top:"#FFF5E3", over:"band", bottom:"#FFF5E3", btype:"dhoti", border:"#A8243A", shoes:"#C08A4A" } },
+  lehenga:  { name:"Sequin lehenga", top:"#EBDFC8", pattern:"sparkle", bottom:"#EBDFC8", bpattern:"sparkle", btype:"lehenga", shoes:"#EBDFC8", jhumka:true, necklace:true, finale:true,
+              him:{ top:"#EBDFC8", pattern:"sparkle", over:"sherwani", bottom:"#F4EFE6", btype:"kurta", shoes:"#C9A35A" } },
+  princess: { name:"Birthday princess", top:"#F8B6CE", pattern:"sparkle", btype:"gown", shoes:"#F8B6CE", crown:true, finale:true,
+              him:{ top:"#2D3A6E", over:"prince", sash:"#F8B6CE", bottom:"#FFFFFF", btype:"pants", shoes:"#1E1E24", crown:true } },
+  eras:     { name:"Eras sparkle", top:"#6FA8E8", pattern:"sparkle", btype:"dress", shoes:"#F2F2F7", boots:true, lips:true, finale:true,
+              him:{ top:"#6FA8E8", pattern:"sparkle", over:"suit", tie:"#1E1E24", bottom:"#1E1E24", btype:"pants", shoes:"#111111" } }
 };
 
 /* =================== app code =================== */
@@ -606,8 +671,9 @@ let BDAY = DEMO ? Date.now() + 10000 : BDAY_REAL;
 
 let S = null;
 try { S = JSON.parse(store.get(KEY)); } catch (e) {}
-S = Object.assign({ woke:false, stars:{}, outfit:"pink", acc:"specs", face:"smile", bg:"room", finale:false, best:{ ride:0, jenga:0 }, daily:{}, snd:true }, S || {});
+S = Object.assign({ woke:false, stars:{}, outfit:"pink", acc:"none", face:"smile", bg:"room", finale:false, best:{ ride:0, jenga:0 }, daily:{}, snd:true }, S || {});
 if (DEMO) S.woke = false;
+if (!S.v2) { S.acc = "none"; S.face = "smile"; S.v2 = 1; }
 const save = () => store.set(KEY, JSON.stringify(S));
 
 const cleared = () => WORLDS.filter(w => S.stars[w.id]).length;
@@ -627,89 +693,164 @@ function pat(id, type, base){
   switch (type) {
     case "dots": return P(8, 8, `<circle cx="2" cy="2" r="1.3" fill="#fff"/><circle cx="6" cy="6" r="1.3" fill="#fff"/>`);
     case "stripes": return P(6, 6, `<rect width="6" height="2.4" fill="#fff" opacity=".85"/>`);
+    case "vstripes": return P(6, 6, `<rect width="2.2" height="6" fill="#fff" opacity=".8"/>`);
     case "knit": return P(4, 6, `<path d="M1 0v6" stroke="#000" stroke-opacity=".1"/>`);
     case "smock": return P(6, 4, `<path d="M0 1h6" stroke="#000" stroke-opacity=".14" stroke-width=".8"/>`);
     case "map": return P(16, 16, `<path d="M1 4q4-3 7 0t7 2M3 12q3 2 6-1t6 1" fill="none" stroke="#C9D3EA" stroke-opacity=".6" stroke-width=".8"/>`);
-    case "sparkle": return P(7, 7, `<circle cx="2" cy="2" r="1" fill="#fff"/><circle cx="5.5" cy="5" r=".8" fill="#C9B07A"/>`);
-    case "camo": return P(18, 18, `<path d="M2 3q4-3 7 1t-2 6q-5 1-5-7zM11 11q5-2 6 3t-6 3q-3-3 0-6z" fill="#8C7A55" opacity=".7"/><circle cx="14" cy="4" r="2.5" fill="#D8C9A2"/>`);
-    case "check": return P(8, 8, `<path d="M0 4h8M4 0v8" stroke="#B7A9D6" stroke-width=".8"/>`);
+    case "sparkle": return P(7, 7, `<circle cx="2" cy="2" r="1" fill="#fff"/><circle cx="5.5" cy="5" r=".8" fill="#fff" opacity=".6"/>`);
+    case "camo": return P(18, 18, `<path d="M2 3q4-3 7 1t-2 6q-5 1-5-7zM11 11q5-2 6 3t-6 3q-3-3 0-6z" fill="#7A6A48" opacity=".6"/><circle cx="14" cy="4" r="2.5" fill="#E2D6B4" opacity=".7"/>`);
+    case "check": return P(8, 8, `<path d="M0 4h8M4 0v8" stroke="#7E86A8" stroke-opacity=".55" stroke-width="1"/>`);
+    case "floral": return P(14, 14, `<circle cx="4" cy="4" r="2.2" fill="#FF8FB0"/><circle cx="4" cy="4" r=".9" fill="#FFD36B"/><circle cx="11" cy="10" r="1.8" fill="#8CC48A"/>`);
+    case "hearts": return P(12, 12, `<path d="M6 9.5L3 6.5a1.7 1.7 0 0 1 3-2 1.7 1.7 0 0 1 3 2z" fill="#fff" opacity=".9"/>`);
+    case "stars": return P(14, 14, `<path d="M4 1.5l.9 1.9 2 .2-1.5 1.4.4 2-1.8-1-1.8 1 .4-2L1.1 3.6l2-.2z" fill="#FFE07A"/><circle cx="11" cy="10" r=".9" fill="#fff"/>`);
+    case "denim": return P(4, 4, `<path d="M0 4L4 0" stroke="#fff" stroke-opacity=".18"/>`);
   }
   return "";
 }
-function face(f, ink){
-  const mc = "#7A2E3A";
-  const eye = x => `<ellipse cx="${x}" cy="60" rx="4" ry="5" fill="${ink}"/><circle cx="${x + 1.4}" cy="58" r="1.5" fill="#fff"/>`;
+
+/* hair: back layer (behind body) and front layer (over the head) */
+const HAIR = {
+  yashu: {
+    back: (c, h) => `<path d="M30 50C24 18 96 18 90 50C95 66 97 84 97 102C97 112 91 117 85 114C86 104 84 98 80 94L40 94C36 98 34 104 35 114C29 117 23 112 23 102C23 84 25 66 30 50Z" fill="${c}"/><path d="M25 88Q23 98 26 108M95 88Q97 98 94 108" stroke="${h}" stroke-width="2" fill="none"/>`,
+    front: (c, h) => `<path d="M27 68C21 34 38 14 62 14C87 14 101 34 93 66C91 52 85 40 72 30C64 42 48 50 33 50C30 56 28 62 27 68Z" fill="${c}"/><path d="M29 58C23 72 25 88 30 100C34 90 34 76 36 64Z" fill="${c}"/><path d="M40 25Q54 17 70 20M76 25Q85 31 89 42M30 72Q29 82 31 92" stroke="${h}" stroke-width="2.4" fill="none" stroke-linecap="round"/><rect x="79" y="20" width="15" height="7" rx="3.5" fill="#FF8FB0" stroke="#fff" stroke-width="1" transform="rotate(38 86 23)"/>`
+  },
+  chandru: {
+    back: () => "",
+    front: (c, h) => `<path d="M28 64C23 38 28 20 42 15C46 6 60 3 70 9C80 6 94 14 93 28C97 38 96 52 92 64C90 52 86 44 80 39C76 45 67 47 61 41C55 47 45 47 39 41C34 47 30 55 28 64Z" fill="${c}"/><path d="M44 17Q50 24 50 33M60 9Q65 17 63 27M74 13Q81 20 79 31M35 30Q38 36 38 42" stroke="${h}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M29 54v13M91 54v13" stroke="${c}" stroke-width="4.5" stroke-linecap="round"/>`
+  },
+  dad: {
+    back: () => "",
+    front: (c, h) => `<path d="M29 58C26 30 42 19 60 19C80 19 95 30 91 58C89 46 85 39 80 37C66 38 50 36 42 29C36 36 31 46 29 58Z" fill="${c}"/><path d="M45 25Q60 21 78 27" stroke="${h}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M29.5 48v12M90.5 48v12" stroke="${h}" stroke-width="4.5" stroke-linecap="round"/>`
+  },
+  mom: {
+    back: (c) => `<path d="M30 54C26 22 94 22 90 54L91 80L29 80Z" fill="${c}"/><circle cx="89" cy="80" r="11" fill="${c}"/>${[0, 1, 2, 3, 4].map(i => `<circle cx="${81 + i * 4}" cy="${70 + (i % 2) * 2.5}" r="2.3" fill="#fff"/>`).join("")}`,
+    front: (c, h) => `<path d="M27 64C23 32 42 18 60 18C78 18 97 32 93 64C91 50 82 38 63 35L60 31L57 35C38 38 29 50 27 64Z" fill="${c}"/><path d="M60 31V20" stroke="#C2342E" stroke-width="2.4" stroke-linecap="round"/><path d="M38 28Q46 22 54 21M68 22Q78 24 84 30" stroke="${h}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+  },
+  appu: {
+    back: (c) => `<path d="M27 56C22 22 98 22 93 56C96 74 96 88 95 98Q60 106 25 98C24 88 24 74 27 56Z" fill="${c}"/>`,
+    front: (c, h) => `<path d="M27 66C21 30 40 15 60 15C80 15 99 30 93 66C92 58 90 52 88 48C76 52 44 52 32 48C30 52 28 58 27 66Z" fill="${c}"/><path d="M42 48v-6M50 50v-7M58 51v-7M66 51v-7M74 50v-7M82 48v-6" stroke="${h}" stroke-width="1.6" opacity=".7"/><path d="M40 24Q56 17 74 22" stroke="${h}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`
+  },
+  harshitha: {
+    back: (c) => `<path d="M29 52C25 20 95 20 91 52L93 90L27 90Z" fill="${c}"/>`,
+    front: (c, h) => `<path d="M27 64C23 32 42 18 60 18C78 18 97 32 93 64C91 50 82 38 63 35L60 31L57 35C38 38 29 50 27 64Z" fill="${c}"/><path d="M40 27Q48 22 56 21M66 21Q76 23 83 29" stroke="${h}" stroke-width="2" fill="none" stroke-linecap="round"/>${[0, 1, 2, 3, 4, 5, 6].map(i => `<ellipse cx="${89 + (i % 2) * 1.5}" cy="${78 + i * 8}" rx="6" ry="5.4" fill="${c}" stroke="${h}" stroke-width="1"/>`).join("")}<path d="M86 134h8" stroke="#E2384B" stroke-width="3.5" stroke-linecap="round"/>`
+  },
+  pranshu: {
+    back: (c) => `<circle cx="33" cy="27" r="11" fill="${c}"/><circle cx="87" cy="27" r="11" fill="${c}"/>`,
+    front: (c, h) => `<path d="M29 62C25 32 42 21 60 21C78 21 95 32 91 62C88 50 82 45 76 43C66 47 54 47 44 43C36 45 31 52 29 62Z" fill="${c}"/><path d="M42 28Q54 23 68 25" stroke="${h}" stroke-width="2.2" fill="none" stroke-linecap="round"/><g fill="#E2384B">${[0, 72, 144, 216, 288].map(a => `<circle cx="${(88 + 4 * Math.cos(a * Math.PI / 180)).toFixed(1)}" cy="${(21 + 4 * Math.sin(a * Math.PI / 180)).toFixed(1)}" r="3.2"/>`).join("")}</g><circle cx="88" cy="21" r="2.4" fill="#FFD36B"/>`
+  }
+};
+
+function face(f, ink, o){
+  const fem = !o.male, mc = o.lips ? "#C21E3A" : "#7A2E3A";
+  const eye = x => (o.eyeC ? `<ellipse cx="${x}" cy="60" rx="4.5" ry="5.6" fill="${o.eyeC}" stroke="${ink}" stroke-width="1.1"/><circle cx="${x}" cy="60.6" r="2.5" fill="${ink}"/>` : `<ellipse cx="${x}" cy="60" rx="4.3" ry="5.4" fill="${ink}"/>`) + `<circle cx="${x + 1.5}" cy="57.8" r="1.6" fill="#fff"/><circle cx="${x - 1.3}" cy="62.2" r=".8" fill="#fff"/>`;
+  const lashL = fem ? `<path d="M44 57.5l-3.6-2.6M44.6 55.6l-2.4-3" stroke="${ink}" stroke-width="1.6" stroke-linecap="round"/>` : "";
+  const lashR = fem ? `<path d="M76 57.5l3.6-2.6M75.4 55.6l2.4-3" stroke="${ink}" stroke-width="1.6" stroke-linecap="round"/>` : "";
   const up = x => `<path d="M${x - 5} 61Q${x} 54 ${x + 5} 61" stroke="${ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
   const dn = x => `<path d="M${x - 5} 59Q${x} 64 ${x + 5} 59" stroke="${ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
-  const smile = `<path d="M54 71Q60 77 66 71" stroke="${mc}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
-  let e = `<g class="eyes">${eye(48) + eye(72)}</g>`, m = smile, br = 6, bh = 3.5;
-  if (f === "happy") { e = up(48) + up(72); m = `<path d="M53 70Q60 80 67 70Z" fill="${mc}"/>`; }
+  let e = `<g class="eyes">${eye(48) + eye(72)}</g>` + lashL + lashR;
+  let m = fem ? `<path d="M54 71Q60 77.5 66 71" stroke="${mc}" stroke-width="2.4" fill="${o.lips ? mc : "none"}" stroke-linecap="round"/>` : `<path d="M55 72Q60 76 65 72" stroke="${mc}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+  let br = 6, bh = 3.5, by = 49.5;
+  if (f === "happy") { e = up(48) + up(72); m = `<path d="M53 70Q60 80 67 70Z" fill="${mc}"/><path d="M55 71h10" stroke="#fff" stroke-width="2"/>`; }
   else if (f === "sleep") { e = dn(48) + dn(72); m = `<path d="M57 73Q60 75 63 73" stroke="${mc}" stroke-width="2" fill="none" stroke-linecap="round"/>`; }
-  else if (f === "wow") { m = `<ellipse cx="60" cy="74" rx="3.6" ry="4.6" fill="${mc}"/>`; }
+  else if (f === "wow") { m = `<ellipse cx="60" cy="74" rx="3.6" ry="4.6" fill="${mc}"/>`; by = 46; }
   else if (f === "pout") { m = `<circle cx="60" cy="73" r="2.9" fill="#C2546A"/>`; br = 8; bh = 5; }
-  else if (f === "wink") { e = up(48) + eye(72); }
+  else if (f === "wink") { e = up(48) + eye(72) + lashR; }
   else if (f === "silly") { e = `<path d="M44 56L51 60L44 64M76 56L69 60L76 64" stroke="${ink}" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; m = `<path d="M53 70Q60 78 67 70Z" fill="${mc}"/><ellipse cx="62" cy="76" rx="3.5" ry="4" fill="#FF7E9A"/>`; }
-  return e + `<ellipse cx="40" cy="70" rx="${br}" ry="${bh}" fill="#FF8FA8" opacity=".5"/><ellipse cx="80" cy="70" rx="${br}" ry="${bh}" fill="#FF8FA8" opacity=".5"/>` + m;
+  const brow = fem
+    ? `<path d="M42.5 ${by + 1}Q48 ${by - 2.8} 53 ${by}M67 ${by}Q72 ${by - 2.8} 77.5 ${by + 1}" stroke="${o.hairC || ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    : `<path d="M41 ${by + 1}L53 ${by - .6}M67 ${by - .6}L79 ${by + 1}" stroke="${o.hairC || ink}" stroke-width="3.6" stroke-linecap="round"/>`;
+  const nose = `<path d="M58.5 66.5q1.5 1.8 3 0" stroke="#00000045" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+  return brow + e + nose + `<ellipse cx="40" cy="70" rx="${br}" ry="${bh}" fill="#FF8FA8" opacity=".45"/><ellipse cx="80" cy="70" rx="${br}" ry="${bh}" fill="#FF8FA8" opacity=".45"/>` + m;
 }
+
+function pompom(x, y, c1, c2){
+  let s = "";
+  for (let a = 0; a < 360; a += 30) { const r = a * Math.PI / 180; s += `<path d="M${x} ${y}L${(x + 13 * Math.cos(r)).toFixed(1)} ${(y + 13 * Math.sin(r)).toFixed(1)}" stroke="${(a / 30) % 2 ? c1 : c2}" stroke-width="5.5" stroke-linecap="round"/>`; }
+  return s + `<circle cx="${x}" cy="${y}" r="5" fill="${c2}"/>`;
+}
+
 function chibi(o){
   const id = "c" + (++CID), ink = "#2A1B22";
-  const sk = o.skin || "#C68B67", hc = o.hairC || "#1E1515", t = o.top || "#F6B3C6", b = o.bottom || t, sh = o.shoes || "#fff";
+  const sk = o.skin || "#C68B67", hc = o.hairC || "#1E1515", hl = o.hairHL || "#4E342B";
+  const t = o.top || "#F6B3C6", b = o.bottom || t, sh = o.shoes || "#fff", male = !!o.male;
   let defs = "", tf = t, bf = b, g = "";
-  if (o.pattern && o.pattern !== "jacket") { defs += pat(id + "t", o.pattern, t); tf = `url(#${id}t)`; }
-  if (o.bpattern) { defs += pat(id + "b", o.bpattern, b); bf = `url(#${id}b)`; }
-  g += `<ellipse cx="60" cy="193" rx="28" ry="5" fill="#000" opacity=".13"/>`;
-  const HB = {
-    long:`<path d="M27 58C20 22 100 22 93 58L99 122C80 132 40 132 21 122Z" fill="${hc}"/>`,
-    bob:`<path d="M27 58C21 22 99 22 93 58L96 94C80 102 40 102 24 94Z" fill="${hc}"/>`,
-    bun:`<circle cx="60" cy="21" r="13" fill="${hc}"/>`,
-    pig:`<circle cx="22" cy="58" r="11" fill="${hc}"/><circle cx="98" cy="58" r="11" fill="${hc}"/>`
-  };
-  g += HB[o.hair] || "";
+  if (o.pattern) { const p = pat(id + "t", o.pattern, t); if (p) { defs += p; tf = `url(#${id}t)`; } }
+  if (o.bpattern) { const p = pat(id + "b", o.bpattern, b); if (p) { defs += p; bf = `url(#${id}b)`; } }
+  const H = HAIR[o.hair] || HAIR.yashu;
+  g += `<ellipse cx="60" cy="193" rx="30" ry="5" fill="#000" opacity=".13"/>`;
+  if (o.hood) g += `<circle cx="60" cy="54" r="40" fill="${o.hood}"/><circle cx="60" cy="54" r="40" fill="#000" opacity=".12"/>`;
+  else g += H.back(hc, hl);
+
   const bt = o.btype || "pants";
-  const shoe = (y = 184) => `<ellipse cx="51" cy="${y}" rx="9" ry="5" fill="${sh}" stroke="#0000001f"/><ellipse cx="69" cy="${y}" rx="9" ry="5" fill="${sh}" stroke="#0000001f"/>`;
-  const skinLegs = `<rect x="45" y="130" width="12" height="52" rx="6" fill="${sk}"/><rect x="63" y="130" width="12" height="52" rx="6" fill="${sk}"/>`;
-  if (bt === "pants" || bt === "kurta") g += `<rect x="43" y="124" width="16" height="58" rx="6" fill="${bf}"/><rect x="61" y="124" width="16" height="58" rx="6" fill="${bf}"/>` + shoe();
-  else if (bt === "shorts") g += skinLegs + shoe() + `<rect x="41" y="122" width="38" height="22" rx="7" fill="${bf}"/>`;
-  else if (bt === "skirt") g += skinLegs + shoe() + `<path d="M40 120H80L90 154Q60 160 30 154Z" fill="${bf}"/>`;
+  const shoe = (y = 184) => o.boots
+    ? `<rect x="42" y="${y - 17}" width="18" height="22" rx="6" fill="${sh}"/><rect x="60" y="${y - 17}" width="18" height="22" rx="6" fill="${sh}"/>`
+    : `<ellipse cx="51" cy="${y}" rx="9.5" ry="5" fill="${sh}" stroke="#00000022"/><ellipse cx="69" cy="${y}" rx="9.5" ry="5" fill="${sh}" stroke="#00000022"/>`;
+  const legs = (y1 = 130) => `<rect x="46" y="${y1}" width="11" height="${182 - y1}" rx="5.5" fill="${sk}"/><rect x="63" y="${y1}" width="11" height="${182 - y1}" rx="5.5" fill="${sk}"/>`;
+  if (bt === "pants" || bt === "kurta") g += `<rect x="${male ? 42 : 43}" y="122" width="${male ? 17 : 16}" height="60" rx="6" fill="${bf}"/><rect x="61" y="122" width="${male ? 17 : 16}" height="60" rx="6" fill="${bf}"/>` + shoe();
+  else if (bt === "shorts") g += legs() + shoe() + `<rect x="40" y="120" width="40" height="24" rx="7" fill="${bf}"/><path d="M60 126v17" stroke="#00000022" stroke-width="1.5"/>`;
+  else if (bt === "skirt") g += legs() + shoe() + `<path d="M40 118H80L91 152Q60 158 29 152Z" fill="${bf}"/>`;
+  else if (bt === "dress") g += legs(140) + shoe() + `<path d="M40 112H80L95 160Q60 168 25 160Z" fill="${tf}"/><path d="M27 158Q60 166 93 158" stroke="#ffffff55" stroke-width="2" fill="none"/>`;
+  else if (bt === "gown") g += shoe(188) + `<path d="M40 110H80L101 188Q60 197 19 188Z" fill="${tf}"/><path d="M50 120L42 188M70 120L78 188" stroke="#ffffff33" stroke-width="2"/>`;
   else if (bt === "saree") g += shoe(188) + `<path d="M38 112H82L91 187Q60 192 29 187Z" fill="${t}"/><path d="M30 178Q60 183 90 178L91 187Q60 192 29 187Z" fill="${o.border}"/><path d="M30.5 176.5Q60 181.5 89.5 176.5" stroke="${o.gold}" stroke-width="1.6" fill="none"/>`;
-  else if (bt === "lehenga") g += shoe(188) + `<path d="M38 116H82L96 188Q60 194 24 188Z" fill="${tf}"/>`;
-  g += `<rect x="36" y="88" width="48" height="44" rx="16" fill="${tf}"/>`;
-  if (bt === "kurta") g += `<path d="M37 112H83L88 162Q60 166 32 162Z" fill="${tf}"/>`;
-  if (o.pattern === "jacket") g += `<path d="M38 104h44" stroke="#9AA0AE" stroke-width="2.5"/><rect x="58.5" y="90" width="3" height="40" fill="#15161B"/>`;
-  const arm = (x, r, cx) => `<rect x="${x}" y="92" width="14" height="36" rx="7" fill="${tf}" transform="rotate(${r} ${cx} 92)"/>`;
-  g += arm(24, 10, 31) + arm(82, -10, 89);
-  g += `<circle cx="25" cy="129" r="6.5" fill="${sk}"/><circle cx="95" cy="129" r="6.5" fill="${sk}"/>`;
+  else if (bt === "lehenga") g += shoe(188) + `<path d="M38 116H82L98 188Q60 196 22 188Z" fill="${bf}"/><path d="M24 182Q60 190 96 182" stroke="#E0AE48" stroke-width="3" fill="none"/>`;
+  else if (bt === "dhoti") g += shoe(188) + `<path d="M41 120H79L83 186H37Z" fill="${bf}"/><path d="M37 178H83V186H37Z" fill="${o.border || "#C9A13B"}"/><path d="M60 124L56 184" stroke="#00000018" stroke-width="1.5"/>`;
+
+  const tor = male ? `M34 92Q60 84 86 92L84 132Q60 136 36 132Z` : `M38 92Q60 85 82 92L79 128Q60 132 41 128Z`;
+  g += `<path d="${tor}" fill="${tf}"/>`;
+  if (bt === "kurta") g += `<path d="M36 112H84L89 160Q60 165 31 160Z" fill="${tf}"/>`;
+  const ov = o.over;
+  if (ov === "collar") g += `<path d="M49 88L60 99L71 88L67 86L60 93L53 86Z" fill="#fff" opacity=".92"/><path d="M60 99V132" stroke="#00000026" stroke-width="1.5"/><circle cx="60" cy="108" r="1.3" fill="#00000040"/><circle cx="60" cy="118" r="1.3" fill="#00000040"/>`;
+  if (ov === "jacket") g += `<path d="M60 89V132" stroke="#0b0b0e" stroke-width="2.6"/><path d="M50 88L60 100L70 88" stroke="#0b0b0e44" stroke-width="2" fill="none"/>`;
+  if (ov === "cardigan") g += `<path d="M52 89L60 132L68 89Z" fill="${o.inner || "#fff"}"/><circle cx="57" cy="106" r="1.4" fill="#8A7660"/><circle cx="57" cy="118" r="1.4" fill="#8A7660"/>`;
+  if (ov === "hoodie") g += `<path d="M48 88Q60 96 72 88" stroke="#00000030" stroke-width="3" fill="none"/><path d="M55 92v13M65 92v13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M45 120h30" stroke="#00000020" stroke-width="8" stroke-linecap="round"/>`;
+  if (ov === "raincoat") g += `<path d="M60 90V132" stroke="#00000030" stroke-width="2"/>${[100, 110, 120].map(y => `<circle cx="64" cy="${y}" r="1.8" fill="#fff"/>`).join("")}`;
+  if (ov === "suit") g += `<path d="M50 88L60 122L70 88Z" fill="#fff"/><path d="M50 88L60 122M70 88L60 122" stroke="#00000044" stroke-width="2"/>` + (o.tie === "bow" ? `<path d="M53 92l7 3 7-3v7l-7-3-7 3z" fill="#C8102E"/>` : `<path d="M58 93h4l2 18-4 5-4-5z" fill="${o.tie || "#C8102E"}"/>`);
+  if (ov === "band") g += `<path d="M51 88Q60 92 69 88" stroke="${o.gold || "#E0AE48"}" stroke-width="3" fill="none"/><path d="M60 90V112" stroke="#00000026" stroke-width="1.5"/>${[96, 102, 108].map(y => `<circle cx="60" cy="${y}" r="1.4" fill="${o.gold || "#E0AE48"}"/>`).join("")}`;
+  if (ov === "sherwani") g += `<path d="M51 88Q60 92 69 88" stroke="#C9A35A" stroke-width="3.5" fill="none"/>${[96, 104, 112, 120, 128, 136, 144].map(y => `<circle cx="60" cy="${y}" r="1.7" fill="#C9A35A"/>`).join("")}`;
+  if (ov === "prince") g += `${[98, 108, 118, 128].map(y => `<circle cx="54" cy="${y}" r="1.7" fill="#FFD36B"/><circle cx="66" cy="${y}" r="1.7" fill="#FFD36B"/>`).join("")}<path d="M38 92L84 128" stroke="${o.sash}" stroke-width="7"/>`;
+  if (o.text) g += `<text x="60" y="${o.kid ? 114 : 112}" text-anchor="middle" font-size="${o.kid ? 14 : 10}" font-weight="900" font-family="Arial, sans-serif" fill="${o.textC}">${o.text}</text>`;
+
+  const cheer = o.pose === "cheer", wave = o.pose === "wave";
+  const sleeve = tf;
+  const arm = (x, r, cx) => `<rect x="${x}" y="92" width="13" height="36" rx="6.5" fill="${sleeve}" transform="rotate(${r} ${cx} 94)"/>`;
+  if (cheer) {
+    const c1 = o.pom1 || "#FF7EA8", c2 = o.pom2 || "#FFD36B";
+    g += arm(25, 150, 31) + arm(82, -150, 89) + `<circle cx="13" cy="63" r="6.5" fill="${sk}"/><circle cx="107" cy="63" r="6.5" fill="${sk}"/>` + pompom(13, 56, c1, c2) + pompom(107, 56, c2, c1);
+  } else if (wave) {
+    g += arm(25, 10, 31) + arm(82, -150, 89) + `<circle cx="25" cy="129" r="6.5" fill="${sk}"/><circle cx="107" cy="63" r="6.5" fill="${sk}"/>`;
+  } else {
+    g += arm(25, 10, 31) + arm(82, -10, 89) + `<circle cx="25" cy="129" r="6.5" fill="${sk}"/><circle cx="95" cy="129" r="6.5" fill="${sk}"/>`;
+  }
   if (bt === "saree") g += `<path d="M42 88L56 88L88 150L76 156Z" fill="${o.border}"/><path d="M56 88L88 150" stroke="${o.gold}" stroke-width="2"/>`;
   if (o.dupatta) g += `<path d="M40 88L52 88L84 158L72 164Z" fill="${o.dupatta}" opacity=".92"/>`;
-  if (bt === "lehenga") g += `<path d="M34 92Q20 140 26 186L38 186Q34 140 42 94ZM86 92Q100 140 94 186L82 186Q86 140 78 94Z" fill="#fff" opacity=".45"/>`;
-  g += `<rect x="54" y="80" width="12" height="12" rx="4" fill="${sk}"/><circle cx="28" cy="60" r="6" fill="${sk}"/><circle cx="92" cy="60" r="6" fill="${sk}"/>`;
-  if (o.earrings) g += `<circle cx="28" cy="67.5" r="1.8" fill="#F2C14E"/><circle cx="92" cy="67.5" r="1.8" fill="#F2C14E"/>`;
-  g += `<circle cx="60" cy="56" r="32" fill="${sk}"/>`;
-  g += face(o.face || "smile", ink);
-  if (o.beard) g += `<path d="M31 62C32 90 88 90 89 62C86 80 76 86 60 86C44 86 34 80 31 62Z" fill="${hc}" opacity=".5"/>`;
-  if (o.mustache) g += `<path d="M50 69Q60 63 70 69Q60 67 50 69Z" fill="${hc}"/>`;
-  const longF = `<path d="M28 60C22 20 98 18 92 58C86 36 68 28 58 33C50 40 38 44 28 60Z" fill="${hc}"/>`;
-  if (o.hair === "long" || o.hair === "bob") g += longF;
-  else if (o.hair === "pig") g += longF + `<path d="M12 44l9 5-9 5zM30 44l-9 5 9 5z" fill="#E2384B"/><path d="M90 44l9 5-9 5zM108 44l-9 5 9 5z" fill="#E2384B"/>`;
-  else if (o.hair === "bun") g += `<path d="M28 58C26 24 94 24 92 58C86 38 72 30 60 30C48 30 34 38 28 58Z" fill="${hc}"/>`;
-  else if (o.hair === "short") g += `<path d="M29 54C27 22 93 22 91 54C84 36 42 34 29 54Z" fill="${hc}"/>`;
-  else if (o.hair === "curly") {
-    g += `<path d="M30 56C28 26 92 26 90 56C82 40 40 38 30 56Z" fill="${hc}"/>`;
-    for (let a = 190; a <= 350; a += 20) { const r = a * Math.PI / 180; g += `<circle cx="${(60 + 31 * Math.cos(r)).toFixed(1)}" cy="${(50 + 27 * Math.sin(r)).toFixed(1)}" r="10" fill="${hc}"/>`; }
-    g += `<circle cx="50" cy="20" r="10" fill="${hc}"/><circle cx="68" cy="19" r="10" fill="${hc}"/>`;
-  }
-  if (o.bindi) g += `<circle cx="60" cy="44" r="1.8" fill="#C8102E"/>`;
-  if (o.glasses === "specs") g += `<g fill="#ffffff22" stroke="${ink}" stroke-width="2.3"><rect x="38" y="52" width="18" height="14" rx="4"/><rect x="64" y="52" width="18" height="14" rx="4"/></g><path d="M56 57h8M38 56l-8-2M82 56l8-2" stroke="${ink}" stroke-width="2"/>`;
-  if (o.glasses === "sun") g += `<g fill="#3A2117" stroke="#1B100C" stroke-width="1.6"><rect x="37" y="51" width="20" height="14" rx="5"/><rect x="63" y="51" width="20" height="14" rx="5"/></g><path d="M57 56h6M37 55l-8-2M83 55l8-2" stroke="#1B100C" stroke-width="2"/><path d="M41 54h5M67 54h5" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`;
-  if (o.hat) g += `<path d="M25 48C25 6 95 6 95 48Z" fill="${o.hat}"/><rect x="23" y="40" width="74" height="13" rx="6.5" fill="${o.hat}" stroke="#00000022"/><path d="M34 28h52M30 36h60" stroke="#0000001a" stroke-width="2"/>`;
-  const vb = o.head ? "16 6 88 88" : "0 0 120 200";
+  if (bt === "lehenga" || bt === "gown") g += `<path d="M38 92Q60 100 82 92" stroke="#ffffff66" stroke-width="2" fill="none"/>`;
+  if (o.baby) g += `<path d="M30 112Q60 96 92 110Q96 132 62 134Q30 134 30 112Z" fill="#FFE6A8" stroke="#E8C77E" stroke-width="1.5"/><path d="M36 116Q62 108 88 116" stroke="#F7B9CB" stroke-width="3" fill="none"/><circle cx="40" cy="110" r="11" fill="#C9906B"/><path d="M29 106Q40 92 51 106Z" fill="#FFB3C9"/><path d="M35 111q2.5 2 5 0M41.5 111q2.5 2 5 0" stroke="${ink}" stroke-width="1.3" fill="none" stroke-linecap="round"/><circle cx="40" cy="115.5" r="1.3" fill="#C2546A"/>`;
+
+  g += `<rect x="54" y="80" width="12" height="12" rx="4" fill="${sk}"/>`;
+  if (o.necklace) g += `<path d="M50 89Q60 99 70 89" stroke="#E0AE48" stroke-width="2.4" fill="none"/><circle cx="60" cy="96" r="2.4" fill="#E2384B" stroke="#E0AE48"/>`;
+  g += `<ellipse cx="29" cy="61" rx="5" ry="6" fill="${sk}"/><ellipse cx="91" cy="61" rx="5" ry="6" fill="${sk}"/>`;
+  if (o.jhumka) g += `<path d="M27 66h4l2 7h-8z M89 66h4l2 7h-8z" fill="#E0AE48"/><circle cx="29" cy="75" r="1.4" fill="#E0AE48"/><circle cx="91" cy="75" r="1.4" fill="#E0AE48"/>`;
+  else if (o.earrings) g += `<circle cx="29" cy="67.5" r="1.9" fill="#F2C14E"/><circle cx="91" cy="67.5" r="1.9" fill="#F2C14E"/>`;
+  g += `<ellipse cx="60" cy="56" rx="31" ry="32" fill="${sk}"/>`;
+  if (o.beard) g += `<path d="M31 62C32 88 46 91 60 91C74 91 88 88 89 62C86 79 76 85 60 85C44 85 34 79 31 62Z" fill="${hc}" opacity=".42"/><path d="M52 70Q60 66.5 68 70" stroke="${hc}" stroke-width="2.6" opacity=".55" fill="none" stroke-linecap="round"/>`;
+  g += face(o.face || "smile", ink, o);
+  if (o.mustache) g += `<path d="M48 70Q54 65 60 68Q66 65 72 70Q66 69 60 71Q54 69 48 70Z" fill="${hc}"/>`;
+  let fr = H.front(hc, hl); if (o.hat || o.crown || o.hood) fr = fr.replace(/<rect x="79"[^>]*\/>/, ""); g += fr;
+  if (o.bindi) g += o.bindi === "big" ? `<circle cx="60" cy="45" r="2.8" fill="#C8102E"/>` : `<circle cx="60" cy="46" r="1.8" fill="#C8102E"/>`;
+  if (o.glasses === "specs") g += `<g fill="#ffffff22" stroke="${ink}" stroke-width="2.4"><rect x="37" y="52" width="19" height="14" rx="3"/><rect x="64" y="52" width="19" height="14" rx="3"/></g><path d="M56 57h8M37 56l-8-2M83 56l8-2" stroke="${ink}" stroke-width="2"/>`;
+  if (o.glasses === "sun") g += `<g fill="#3A2117" stroke="#1B100C" stroke-width="1.6"><rect x="37" y="51" width="20" height="14" rx="6"/><rect x="63" y="51" width="20" height="14" rx="6"/></g><path d="M57 56h6M37 55l-8-2M83 55l8-2" stroke="#1B100C" stroke-width="2"/><path d="M41 54h5M67 54h5" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>`;
+  if (o.hood) g += `<path d="M23 72C17 22 103 22 97 72" stroke="${o.hood}" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+  if (o.hat) g += `<path d="M25 46C25 6 95 6 95 46Z" fill="${o.hat}"/><path d="M34 26h52M30 36h60" stroke="#0000001a" stroke-width="2"/><rect x="23" y="38" width="74" height="12" rx="6" fill="${o.hat}" stroke="#00000022"/><circle cx="60" cy="8" r="7" fill="#fff"/>`;
+  if (o.crown) g += `<path d="M42 ${male ? 12 : 22}L46 ${male ? -2 : 8}L53 ${male ? 7 : 17}L60 ${male ? -6 : 4}L67 ${male ? 7 : 17}L74 ${male ? -2 : 8}L78 ${male ? 12 : 22}Z" fill="#FFD36B" stroke="#E0A92A" stroke-width="1.5"/><circle cx="60" cy="${male ? 3 : 13}" r="2.2" fill="#FF7EA8"/>`;
+  const vb = o.head ? "16 6 88 88" : "0 -8 120 208";
   const kid = o.kid && !o.head ? ` transform="translate(60 196) scale(.62) translate(-60 -196)"` : "";
   return `<svg class="chibi-svg" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>${defs}</defs><g${kid}>${g}</g></svg>`;
 }
 const accOf = () => S.acc === "none" ? null : S.acc;
 const yIn = (k, extra) => Object.assign({}, YASHU, OUTFITS[k] || OUTFITS.pink, { glasses: accOf() }, extra || {});
 const yOpts = extra => yIn(S.outfit, extra);
-const ch = extra => Object.assign({}, CHANDRU, extra || {});
+const himIn = (k, extra) => Object.assign({}, CHANDRU, (OUTFITS[k] || OUTFITS.pink).him, { pom1: (OUTFITS[k] || OUTFITS.pink).top, pom2: "#FFD36B" }, extra || {});
+const ch = extra => himIn(S.outfit, extra);
 
 /* props */
 const REC_SVG = `<svg viewBox="0 0 100 70"><rect x="4" y="22" width="92" height="44" rx="8" fill="#B0703F"/><rect x="4" y="22" width="92" height="8" rx="4" fill="#C88552"/><ellipse cx="44" cy="28" rx="34" ry="10" fill="#222"/><ellipse cx="44" cy="28" rx="10" ry="3.2" fill="#FF7EA8"/><path d="M84 12L66 26" stroke="#ddd" stroke-width="4" stroke-linecap="round"/><circle cx="84" cy="12" r="5" fill="#bbb"/></svg>`;
@@ -717,7 +858,7 @@ const TV_SVG = `<svg viewBox="0 0 100 78"><rect x="4" y="4" width="92" height="6
 const HELM_SVG = `<svg viewBox="0 0 100 80"><path d="M10 64Q8 10 52 10Q94 10 92 56L92 68L10 68Z" fill="#2F4FA8"/><path d="M46 34Q72 30 90 40L90 58L46 58Z" fill="#9FD0FF" opacity=".8"/><path d="M14 50h28" stroke="#fff" stroke-width="5" stroke-linecap="round"/><text x="22" y="34" font-size="15" font-weight="800" fill="#fff" font-family="sans-serif">SMK</text></svg>`;
 const HELMETS_SVG = `<svg viewBox="0 0 100 150"><path d="M36 76h28l5 72H31z" fill="#7A5638"/><path d="M40 90v50M50 84v60M60 92v46" stroke="#5E4129" stroke-width="2"/><ellipse cx="50" cy="76" rx="14" ry="4" fill="#9A7350"/><path d="M18 78Q16 40 50 40Q84 40 82 78Z" fill="#2F4FA8"/><path d="M28 64Q50 54 80 64L80 74L28 74Z" fill="#9FD0FF" opacity=".75"/><path d="M26 48Q24 12 50 12Q76 12 74 48Z" fill="#F4F4F6"/><path d="M34 38Q50 31 68 38L68 47L34 47Z" fill="#5A6170"/></svg>`;
 function bikeSVG(){
-  const cut = (svg, x, y, w) => svg.replace('viewBox="0 0 120 200"', 'viewBox="0 0 120 140"').replace("<svg ", `<svg x="${x}" y="${y}" width="${w}" height="${(w * 140 / 120).toFixed(1)}" `);
+  const cut = (svg, x, y, w) => svg.replace('viewBox="0 -8 120 208"', 'viewBox="0 -8 120 148"').replace("<svg ", `<svg x="${x}" y="${y}" width="${w}" height="${(w * 148 / 120).toFixed(1)}" `);
   const yv = cut(chibi(yIn(S.outfit, { face:"happy" })), 14, 8, 56);
   const cv = cut(chibi(ch({ face:"happy" })), 46, 2, 62);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -30 160 150">${yv}${cv}
@@ -741,6 +882,16 @@ function tone(f, d = .08, type = "sine", v = .06, when = 0){
     o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d + .03);
   } catch (e) {}
 }
+const CHEERS = ["Pranshu: Yay Yashu! 🎀", "Pranshu: Yashu is the best! 🌟", "Pranshu: Wow, Yashu! Again! 👏", "Pranshu: Birthday queen! 👑", "Pranshu: See? Girls are the best."];
+const OOPS = ["Pranshu: It's okay Yashu, try again! 💗", "Pranshu: That was a boy's fault. Definitely. 🙄", "Pranshu: Shake it off, Yashu! 🎵", "Pranshu: You've got this, Yashu!"];
+let sqT = 0;
+function squadSay(t){ const b = $("#sqB"); if (b) b.textContent = t; }
+function squadReact(kind){
+  if (!$("#sqB") || !$("#sPlay").classList.contains("on")) return;
+  const now = Date.now(); if (now - sqT < 1100) return; sqT = now;
+  if (kind === "good") { squadSay(rand(CHEERS)); bump("#sqP"); }
+  else { squadSay(rand(OOPS)); bump("#sqP"); }
+}
 const sfx = {
   pop: () => tone(660, .08, "triangle"),
   good: () => { tone(784, .09, "triangle"); tone(1046, .12, "triangle", .06, .07); },
@@ -748,6 +899,7 @@ const sfx = {
   win: () => [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, .25, "triangle", .07, i * .1)),
   tune: () => [659, 784, 880, 784, 659, 587, 659, 784, 523, 587, 659].forEach((f, i) => tone(f, .22, "triangle", .05, i * .22))
 };
+{ const g0 = sfx.good, b0 = sfx.bad; sfx.good = () => { g0(); squadReact("good"); }; sfx.bad = () => { b0(); squadReact("bad"); }; }
 function syncSnd(){ $("#sndBtn").textContent = S.snd ? "🔊" : "🔇"; }
 $("#sndBtn").onclick = () => { S.snd = !S.snd; save(); syncSnd(); sfx.pop(); };
 
@@ -851,8 +1003,9 @@ function renderHome(){
   const d = dayIdx();
   $("#hello").innerHTML = d >= 0 && d <= 6 ? `Happy birthday, <span>${SITE.her}</span>` : `Hi, <span>${SITE.her}</span>`;
   $("#hYashu").innerHTML = chibi(yOpts({ face: S.face }));
-  $("#hChandru").innerHTML = chibi(ch());
-  $("#hPranshu").innerHTML = chibi(PRANSHU);
+  $("#hChandru").innerHTML = chibi(ch({ face: "happy" }));
+  $("#hPranshu").innerHTML = chibi(PRANSHU) + `<span class="balloon">🎈</span>`;
+  later(pranshuIdle, 5000);
   $("#propRec").innerHTML = REC_SVG; $("#propTv").innerHTML = TV_SVG; $("#propHelm").innerHTML = HELM_SVG;
   const h = istHour(); $("#win").classList.toggle("night", h >= 19 || h < 6);
   $("#dailyBtn").hidden = !availDays().some(i => !S.daily[i]);
@@ -861,15 +1014,35 @@ function renderHome(){
 }
 $("#playBtn").onclick = () => { sfx.pop(); const i = nextWorld(); if (i >= 0) openWorld(i); else if (!S.finale) openFinale(); else show("sGifts"); };
 const Y_LINES = [["happy","Hehe, again!"],["pout","Hmph. Only one cake?"],["wink","Birthday girl coming through."],["silly","The face. You know the face."],["wow","Is that a waterfall?!"],["happy","Best birthday ever."]];
-const C_LINES = ["Happy birthday, Yashu!", "I'm not perfect, but I'm yours.", "Next trip? You pick.", "Okay okay, you were right.", "One more photo? Fine. Ten more."];
+const P_TAP = ["Yashu! Happy birthday! 🌸", "Flower for you, Yashu! 🌸", "Hug, Yashu! 🤗", "I'm your sidekick, Yashu! 🎀", "No boys allowed near Yashu! 🙅‍♀️"];
+const P_ACTS = [
+  st => { say(st, "Pranshu: Flower for Yashu! 🌸", 4, 26, "25%", 2600); floaters(st, ["🌸", "🌼", "💗"], 34, 50, 7); yFace("happy"); },
+  st => { say(st, "Pranshu: Ew, boys! Stay away from Yashu! 🙅‍♀️", 4, 26, "25%", 2600); bump("#hChandru"); },
+  st => { say(st, "Pranshu: I fixed your dress, Yashu ✨", 4, 26, "25%", 2600); floaters(st, ["✨", "✨"], 40, 60, 6); yFace("wink"); },
+  st => { say(st, "Pranshu: Yashu, let's play! Tap the helmet 🪖", 4, 26, "25%", 2600); bump("#hPranshu"); },
+  st => { say(st, "Pranshu: Jaanu is sleeping. Shhh! 🤫", 4, 26, "25%", 2600); },
+  st => { say(st, "Pranshu: My balloon is bigger than his hair 🎈", 4, 26, "25%", 2600); bump("#hPranshu"); },
+  st => { say(st, "Pranshu: Yashu is the birthday queen. Boys are just… there.", 4, 26, "25%", 3000); yFace("happy"); }
+];
+function bump(sel){ const e = typeof sel === "string" ? $(sel) : sel; if (!e) return; e.classList.remove("jump"); void e.offsetWidth; e.classList.add("jump"); }
+function yFace(f){ const y = $("#hYashu"); if (!y) return; y.innerHTML = chibi(yOpts({ face: f })); later(() => { y.innerHTML = chibi(yOpts({ face: S.face })); }, 1800); }
+function pranshuIdle(){ if (!$("#sHome").classList.contains("on")) return; rand(P_ACTS)($("#room")); tone(990, .06, "triangle", .03); later(pranshuIdle, 7000 + Math.random() * 4000); }
+const SONGS = ["Love Story", "Lover", "Enchanted", "cardigan", "Wildest Dreams", "Style", "Paper Rings", "You Belong With Me", "Blank Space", "Daylight", "Mine", "Shake It Off"];
+function openMusic(){
+  const y = $("#hYashu"); y.classList.add("dance"); y.innerHTML = chibi(yOpts({ face: "happy" })); bump("#hChandru"); floaters($("#room"), ["🎵", "🎶", "💗"], 50, 20, 8);
+  modal(`<p class="eyebrow">Taylor on the record player 🎶</p><iframe class="spot" src="https://open.spotify.com/embed/artist/06HL4z0CvFAxyc27GXpf02?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Taylor Swift on Spotify"></iframe><p class="tiny" style="margin:10px 0 4px">Tap play above, or open a favourite in Spotify:</p><div class="songs">${SONGS.map(t => `<a href="https://open.spotify.com/search/${encodeURIComponent(t + " Taylor Swift")}" target="_blank" rel="noopener">♫ ${t}</a>`).join("")}</div><button class="btn wide" type="button" data-x>Back to dancing 💃</button>`);
+  later(() => { y.classList.remove("dance"); y.innerHTML = chibi(yOpts({ face: S.face })); }, 9000);
+}
+const C_LINES = ["Happy birthday, Yashu! 🎉", "I'm not perfect, but I'm yours.", "Okay okay, you were right.", "Matching outfits. Obviously."];
 $("#room").addEventListener("click", ev => {
   const st = $("#room"), w = ev.target.closest(".who");
   if (!w) return;
   if (w.id === "hYashu") { const [f, l] = rand(Y_LINES); $("#hYashu").innerHTML = chibi(yOpts({ face: f })); w.classList.remove("spin"); void w.offsetWidth; w.classList.add("spin"); say(st, l, 18, 14); sfx.pop(); later(() => { $("#hYashu").innerHTML = chibi(yOpts({ face: S.face })); w.classList.remove("spin"); }, 1800); }
-  if (w.id === "hChandru") { say(st, rand(C_LINES), 40, 12, "70%"); tone(520, .1, "triangle"); }
-  if (w.id === "hPranshu") { w.classList.remove("spin"); void w.offsetWidth; w.classList.add("spin"); $("#hYashu").innerHTML = chibi(yOpts({ face: "happy" })); say(st, "Hug! 🤗", 2, 40, "25%"); floaters(st, ["💗", "💕", "✨"], 16, 60); sfx.good(); later(() => { $("#hYashu").innerHTML = chibi(yOpts({ face: S.face })); w.classList.remove("spin"); }, 1600); }
+  if (w.id === "hChandru") { say(st, rand(C_LINES), 36, 10, "70%"); bump(w); floaters(st, ["💗", "✨"], 78, 30, 5); tone(520, .1, "triangle"); tone(660, .1, "triangle", .06, .12); if (Math.random() < .55) later(() => say(st, "Pranshu: Boys are SO loud. 🙄", 4, 26, "25%", 2200), 1700); }
+  if (w.id === "hPranshu") { w.classList.remove("spin"); void w.offsetWidth; w.classList.add("spin"); $("#hYashu").innerHTML = chibi(yOpts({ face: "happy" })); say(st, rand(P_TAP), 2, 30, "25%"); floaters(st, ["🌸", "💗", "🎈", "✨"], 26, 55, 8); sfx.good(); later(() => { $("#hYashu").innerHTML = chibi(yOpts({ face: S.face })); w.classList.remove("spin"); }, 1600); }
 });
-$("#propRec").onclick = () => { const y = $("#hYashu"); y.classList.add("dance"); $("#hYashu").innerHTML = chibi(yOpts({ face: "happy" })); say($("#room"), "♪ Taylor on repeat", 18, 14); floaters($("#room"), ["🎵", "🎶", "💗"], 62, 20, 8); sfx.tune(); later(() => { y.classList.remove("dance"); $("#hYashu").innerHTML = chibi(yOpts({ face: S.face })); }, 2600); };
+$("#propRec").onclick = () => { openMusic(); };
+const _oldRec = () => { const y = $("#hYashu"); y.classList.add("dance"); $("#hYashu").innerHTML = chibi(yOpts({ face: "happy" })); say($("#room"), "♪ Taylor on repeat", 18, 14); floaters($("#room"), ["🎵", "🎶", "💗"], 62, 20, 8); sfx.tune(); later(() => { y.classList.remove("dance"); $("#hYashu").innerHTML = chibi(yOpts({ face: S.face })); }, 2600); };
 $("#propTv").onclick = () => { say($("#room"), "Movie night! Geethanjali, Anand or a Prabhas film?", 22, 14, "70%", 3200); floaters($("#room"), ["🍿", "🍿", "🎬"], 78, 40); sfx.pop(); };
 $("#propHelm").onclick = () => { sfx.pop(); show("sWorlds"); };
 $("#dailyBtn").onclick = () => { const d = availDays().find(i => !S.daily[i]); if (d != null) openDaily(d); };
@@ -893,7 +1066,7 @@ $("#setBtn").onclick = () => {
   $("#oWake").onclick = () => { closeModal(); runWake(); };
   if ($("#oParty")) $("#oParty").onclick = () => { closeModal(); openFinale(); };
   $("#oSnd").onclick = () => { S.snd = !S.snd; save(); syncSnd(); $("#oSnd").textContent = "Sound: " + (S.snd ? "on" : "off"); };
-  $("#oReset").onclick = () => { if (confirm("Start over? Stars, outfits and gifts will reset.")) { const snd = S.snd; S = { woke: true, stars: {}, outfit: "pink", acc: "specs", face: "smile", bg: "room", finale: false, best: { ride: 0, jenga: 0 }, daily: {}, snd }; save(); closeModal(); show("sHome"); } };
+  $("#oReset").onclick = () => { if (confirm("Start over? Stars, outfits and gifts will reset.")) { const snd = S.snd; S = { woke: true, v2: 1, stars: {}, outfit: "pink", acc: "none", face: "smile", bg: "room", finale: false, best: { ride: 0, jenga: 0 }, daily: {}, snd }; save(); closeModal(); show("sHome"); } };
 };
 
 /* ---------- modal + lightbox ---------- */
@@ -953,8 +1126,16 @@ function startGame(){
   if (cleanup) { cleanup(); cleanup = null; }
   finished = false;
   const w = WORLDS[cur];
-  $("#stageBox").innerHTML = `<div class="game" id="game"></div>`;
-  cleanup = GAMES[w.game]($("#game"), w, finish, failMsg, curOpt);
+  $("#stageBox").innerHTML = `<div class="game" id="game"></div>
+    <div class="squad"><div class="sq" id="sqP">${chibi(Object.assign({}, PRANSHU, { pose: "wave" }))}</div><div class="sqb" id="sqB">Pranshu: I'm your sidekick, Yashu! Stuck? Press my button.</div></div>
+    <button class="helpbtn" id="helpBtn" type="button">🎀 Pranshu, help! (once per try)</button>`;
+  const gEl = $("#game");
+  cleanup = GAMES[w.game](gEl, w, finish, failMsg, curOpt);
+  $("#helpBtn").onclick = () => {
+    const r = gEl.help ? gEl.help() : "";
+    if (!r) { squadSay("Pranshu: Wait, Yashu… not now! 👀"); return; }
+    squadSay(r); bump("#sqP"); sfx.pop(); const hb = $("#helpBtn"); hb.disabled = true; hb.textContent = "🎀 Pranshu helped!";
+  };
 }
 function failMsg(msg){
   const g = $("#game"); if (!g) return;
@@ -988,7 +1169,7 @@ function showReward(i, st, first){
   $("#winBox").innerHTML = `<p class="eyebrow">World ${i + 1} cleared</p><h2 class="h2">${w.emoji} ${w.name}</h2>
     <div class="bigstars">${[1, 2, 3].map(n => `<span class="${n <= st ? "on" : ""}" style="--d:${n * .18}s">★</span>`).join("")}</div>
     <p class="note">${w.note}</p>
-    <div class="card unlock"><div class="um">${chibi(yIn(w.outfit, { face: "happy" }))}</div><div><small>${first ? "New outfit unlocked" : "Outfit"}</small><b>${o.name}</b><button class="link" id="wearBtn" type="button">${S.outfit === w.outfit ? "Wearing it ✓" : "Wear it now"}</button></div></div>
+    <div class="card unlock"><div class="um">${chibi(yIn(w.outfit, { face: "happy" }))}</div><div class="um">${chibi(himIn(w.outfit, { face: "happy" }))}</div><div><small>${first ? "New couple outfit" : "Couple outfit"}</small><b>${o.name}</b><button class="link" id="wearBtn" type="button">${S.outfit === w.outfit ? "Wearing it ✓" : "Wear it now"}</button></div></div>
     <h3 class="h3">Memories unlocked</h3>
     <div class="pols">${w.photos.map((p, k) => `<button class="pol" type="button" data-k="${k}" style="--r:${ROTS[k % ROTS.length]}deg"><img src="${src("m/", p)}" alt="${CAP[p]}" ${dims(p)} loading="lazy"><span>${CAP[p]}</span></button>`).join("")}</div>
     <div class="row"><button class="btn big" id="nextBtn" type="button">${last ? "Go to the party 🎂" : "Next world →"}</button><button class="btn alt" id="homeBtn2" type="button">Home</button></div>`;
@@ -1005,8 +1186,8 @@ function openFinale(){
   const firstTime = !S.finale;
   S.finale = true; save();
   show("sFinale");
-  const P = [[DAD, -2, 33, 41], [PADMA, 22, 33, 41], [HARSHITHA, 46, 33, 41], [APPU, 70, 33, 41], [PRANSHU, -4, 3, 52], [yIn("saree", { face: "happy", glasses: null }), 25, 3, 54], [ch({ face: "happy" }), 57, 3, 55]];
-  $("#partyStage").innerHTML = BUNTING + P.map(([o, l, b, h]) => `<div class="who" style="left:${l}%;bottom:${b}%;height:${h}%">${chibi(o)}</div>`).join("") + `<div class="bubble"></div>`;
+  const P = [[DAD, -1, 44, 35], [PADMA, 23, 44, 35], [HARSHITHA, 47, 44, 35], [APPU, 71, 44, 35], [Object.assign({}, PRANSHU, { pose: "wave" }), -2, 3, 46], [yIn("saree", { face: "happy" }), 24, 3, 49], [himIn("saree", { face: "happy" }), 56, 3, 50]];
+  $("#partyStage").innerHTML = BUNTING + P.map(([o, l, b, h]) => `<div class="who${o.hair === "pranshu" ? " dance" : ""}" style="left:${l}%;bottom:${b}%;height:${h}%">${chibi(o)}</div>`).join("") + `<div class="bubble"></div>`;
   later(() => say($("#partyStage"), "Happy birthday, Yashu! 💗", 30, 18, "50%", 3500), 500);
   later(() => fireworks(firstTime ? 8 : 4), 300);
 }
@@ -1020,12 +1201,12 @@ function renderWard(){
   if (S.bg === "room") { bt.className = "stage booth sc-room"; bt.style.backgroundImage = ""; }
   else { bt.className = "stage booth"; bt.style.backgroundImage = `url(${src("m/", S.bg)})`; }
   $("#bYashu").innerHTML = chibi(yOpts({ face: S.face }));
-  $("#bChandru").innerHTML = chibi(ch({ face: S.face === "pout" ? "wow" : S.face }));
+  $("#bChandru").innerHTML = chibi(ch({ face: S.face === "pout" ? "wow" : S.face === "silly" ? "silly" : "happy" }));
   $$("#accSeg button").forEach(b => b.classList.toggle("on", b.dataset.a === S.acc));
   $$("#faceSeg button").forEach(b => b.classList.toggle("on", b.dataset.f === S.face));
   const open = ["room", ...WORLDS.filter(w => S.stars[w.id]).flatMap(w => w.photos), ...(S.finale ? BRIDE : [])];
   $("#bgs").innerHTML = open.map(p => `<button type="button" data-bg="${p}" class="${S.bg === p ? "on" : ""}" aria-label="Background">${p === "room" ? "🏠" : `<img src="${src("t/", p)}" alt="" loading="lazy">`}</button>`).join("") + (open.length === 1 ? `<span class="tiny" style="align-self:center;margin:0 8px">Clear worlds to unlock photo backgrounds</span>` : "");
-  $("#ocs").innerHTML = Object.keys(OUTFITS).map(k => { const ok = outfitOpen(k); return `<button class="oc ${ok ? "" : "locked"} ${S.outfit === k ? "sel" : ""}" type="button" data-o="${k}"><div class="ov2">${chibi(yIn(k, { face: "smile" }))}</div><small>${ok ? OUTFITS[k].name : "Locked"}</small>${ok ? "" : `<em>${outfitHint(k)}</em>`}</button>`; }).join("");
+  $("#ocs").innerHTML = Object.keys(OUTFITS).map(k => { const ok = outfitOpen(k); return `<button class="oc ${ok ? "" : "locked"} ${S.outfit === k ? "sel" : ""}" type="button" data-o="${k}"><div class="ov2"><span>${chibi(yIn(k, { face: "smile" }))}</span><span>${chibi(himIn(k))}</span></div><small>${ok ? OUTFITS[k].name : "Locked"}</small>${ok ? "" : `<em>${outfitHint(k)}</em>`}</button>`; }).join("");
 }
 $("#accSeg").onclick = e => { const b = e.target.closest("button"); if (!b) return; S.acc = b.dataset.a; save(); sfx.pop(); renderWard(); };
 $("#faceSeg").onclick = e => { const b = e.target.closest("button"); if (!b) return; S.face = b.dataset.f; save(); sfx.pop(); renderWard(); };
@@ -1158,6 +1339,7 @@ const GAMES = {
       }
       raf = requestAnimationFrame(frame);
     }
+    el.help = () => { if (done) return ""; inv = 5; return "Pranshu: I'm holding your helmet! Shield on ⛑️"; };
     raf = requestAnimationFrame(frame);
     return () => { cancelAnimationFrame(raf); ro.disconnect(); removeEventListener("keydown", key); };
   },
@@ -1192,6 +1374,7 @@ const GAMES = {
       }
     });
     function finishHop(){ box.innerHTML = ""; hint.textContent = "Made it to the big rock!"; $(".bigrock", el).hidden = false; hp.style.left = "38%"; hp.style.bottom = "31%"; floaters(ar, ["💗", "💦", "✨"], 50, 40, 8); T.push(setTimeout(() => win(miss === 0 ? 3 : miss === 1 ? 2 : 1), 1500)); }
+    el.help = () => { if (row >= ROWS) return ""; const s = box.children[safe]; if (!s) return ""; s.classList.add("glint"); T.push(setTimeout(() => s.classList.remove("glint"), 1300)); return "Pranshu: Psst, Yashu! That one! 👉"; };
     round();
     return () => T.forEach(clearTimeout);
   },
@@ -1237,6 +1420,7 @@ const GAMES = {
     cv.addEventListener("pointermove", e => { if (down) rub(e); });
     const up = () => { down = false; lastP = null; }; cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
     const iv = setInterval(() => { if (!done) $(".ft", el).textContent = Math.floor((performance.now() - t0) / 1000); }, 500);
+    el.help = () => { if (found || done) return ""; got(); return "Pranshu: Found him! Boys are bad at hiding. 🙄"; };
     place(); requestAnimationFrame(paint);
     return () => { clearInterval(iv); T.forEach(clearTimeout); };
   },
@@ -1248,7 +1432,7 @@ const GAMES = {
       <div class="tilt"><i></i></div><div class="water"></div><div class="wall"></div><div class="goal">${chibi(ch({ face: "happy" }))}</div><div class="walker">${chibi(yOpts())}</div><p class="hint">Hold the buttons to stay balanced</p></div>
       <div class="lean"><button class="btn alt" type="button" data-d="-1">◀ Lean</button><button class="btn alt" type="button" data-d="1">Lean ▶</button></div>`;
     const wk = $(".walker", el), nd = $(".tilt i", el), ar = $(".arena", el), lvEl = $(".lv", el), bp = $(".bp", el), hint = $(".hint", el);
-    let ang = 0, av = 0, inp = 0, noise = 0, nT = 0, prog = 0, lives = 3, pause = 0, done = false, started = false, last = performance.now(), raf = 0; const T = [];
+    let steady = 0, ang = 0, av = 0, inp = 0, noise = 0, nT = 0, prog = 0, lives = 3, pause = 0, done = false, started = false, last = performance.now(), raf = 0; const T = [];
     const lv = () => lvEl.textContent = hearts(lives); lv();
     const begin = () => { if (!started) { started = true; hint.style.opacity = 0; } };
     $$(".lean button", el).forEach(b => {
@@ -1266,7 +1450,7 @@ const GAMES = {
       if (started && !done) {
         if (pause > 0) pause -= dt;
         else {
-          nT -= dt; if (nT <= 0) { nT = .5 + Math.random() * .5; noise = (Math.random() * 2 - 1) * (1 + prog * .8); }
+          if (steady > 0) { steady -= dt; noise = 0; av *= .9; ang *= .95; } nT -= dt; if (nT <= 0 && steady <= 0) { nT = .5 + Math.random() * .5; noise = (Math.random() * 2 - 1) * (1 + prog * .8); }
           av += (ang * 1.5 + noise * 30 + inp * 100) * dt; av *= Math.max(0, 1 - 1.1 * dt); ang += av * dt;
           prog += dt * (Math.abs(ang) < 22 ? .055 : .015);
           if (Math.abs(ang) > 40) {
@@ -1281,6 +1465,7 @@ const GAMES = {
       nd.style.left = (50 + Math.max(-50, Math.min(50, ang / 40 * 50))) + "%"; bp.textContent = Math.floor(prog * 100);
       raf = requestAnimationFrame(frame);
     }
+    el.help = () => { if (done) return ""; begin(); steady = 6; return "Pranshu: Hold my hand, Yashu! I won't let you fall 🤝"; };
     raf = requestAnimationFrame(frame);
     return () => { cancelAnimationFrame(raf); T.forEach(clearTimeout); removeEventListener("keydown", kd); removeEventListener("keyup", ku); };
   },
@@ -1304,6 +1489,7 @@ const GAMES = {
     });
     const pk = $(".peek-btn", el), on = () => puz.classList.add("peek"), off = () => puz.classList.remove("peek");
     pk.addEventListener("pointerdown", on); ["pointerup", "pointerleave", "pointercancel"].forEach(v => pk.addEventListener(v, off));
+    el.help = () => { if (done) return ""; let n = 0; for (let t = 0; t < N && n < 3; t++) { if (order[t] !== t) { const j = order.indexOf(t); [order[t], order[j]] = [order[j], order[t]]; n++; } } sel = null; draw(); if (order.every((v, i) => v === i)) { done = true; puz.style.gap = "0"; setTimeout(() => win(2), 400); } return "Pranshu fixed 3 tiles for you, Yashu! 🧩"; };
     return () => {};
   },
 
@@ -1337,6 +1523,7 @@ const GAMES = {
       $(".cf", el).textContent = right;
       T.push(setTimeout(() => { r++; if (r < ROUNDS) round(); else if (right >= 3) win(right >= 5 ? 3 : right >= 4 ? 2 : 1); else fail(`Found ${right} of 5. The magician wins this time. Rematch?`); }, 1500));
     }));
+    el.help = () => { if (lock) return ""; const c = cs[q]; c.classList.add("up"); T.push(setTimeout(() => c.classList.remove("up"), 900)); return "Pranshu: I peeked! That's the queen 👑"; };
     round();
     return () => { dead = true; T.forEach(clearTimeout); };
   },
@@ -1369,17 +1556,20 @@ const GAMES = {
         if (lives <= 0) { done = true; tw.classList.add("fallen"); T.push(setTimeout(() => endless ? endlessEnd("jenga", pulled) : fail("The tower fell! Steady hands, try again?"), 1000)); }
       }
     }
+    el.help = () => { if (done) return ""; zw = Math.min(.55, zw + .22); newZone(); return "Pranshu made the green zone bigger! 🟩"; };
     $(".pull", el).addEventListener("click", pull);
     $(".arena", el).addEventListener("pointerdown", pull);
     function faces(){
       cancelAnimationFrame(raf);
-      const FACES = ["happy", "wow", "pout", "wink", "silly"]; let k = 0, wrong = 0;
+      const FS = [["y_smile", "😁"], ["y_happy", "😊"], ["y_cheeky", "😏"], ["y_focus", "🧐"]];
+      const order = shuffle(FS); let k = 0, wrong = 0;
       const draw = () => {
-        const tgt = rand(FACES), opts = shuffle([tgt, ...shuffle(FACES.filter(f => f !== tgt)).slice(0, 2)]);
+        const [img, tgt] = order[k];
+        const opts = shuffle([tgt, ...shuffle(FS.map(f => f[1]).filter(e => e !== tgt)).slice(0, 2)]);
         el.innerHTML = `<div class="hud2"><span>Face <b>${k + 1}</b>/4</span><span>Oops <b>${wrong}</b></span></div>
-          <div class="facebox"><p class="eyebrow">Yashu makes this face</p><div class="tface">${chibi(yOpts({ face: tgt, head: true, glasses: "specs", hat: null }))}</div></div>
-          <div class="fopts">${opts.map(f => `<button type="button" class="fo" data-f="${f}" aria-label="${f} face">${chibi(ch({ face: f, head: true }))}</button>`).join("")}</div>
-          <p class="tiny">Which ${SITE.him} is copying her?</p>`;
+          <div class="facebox"><p class="eyebrow">Which emoji is Yashu?</p><div class="tface"><img src="photos/faces/${img}.png" alt="Yashu" style="width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 4px #fff,0 10px 20px -8px rgba(0,0,0,.4)"></div></div>
+          <div class="fopts">${opts.map(e => `<button type="button" class="fo" data-f="${e}" style="font-size:3rem;display:grid;place-items:center">${e}</button>`).join("")}</div>
+          <p class="tiny">Match her real face to the emoji.</p>`;
         $(".fopts", el).onclick = e => {
           const b = e.target.closest(".fo"); if (!b || b.classList.contains("no")) return;
           if (b.dataset.f === tgt) { sfx.good(); k++; if (k >= 4) { const m = (3 - lives) + wrong; win(m === 0 ? 3 : m <= 2 ? 2 : 1); } else draw(); }
@@ -1387,14 +1577,15 @@ const GAMES = {
         };
       };
       draw();
+      el.help = () => { const w = $$(".fo:not(.no)", el).find(b => b.dataset.f !== order[k][1]); if (!w) return ""; w.classList.add("no"); return "Pranshu: Not that one, Yashu! 🙅‍♀️"; };
     }
     return () => { cancelAnimationFrame(raf); T.forEach(clearTimeout); };
   },
 
   /* 8. Family & Home: catch the cake, blow the candles */
   cake(el, w, win){
-    const G = [{ n: "Padma", o: PADMA, it: "🎂", what: "the cake" }, { n: "Appu", o: APPU, it: "🍬", what: "the sprinkles" }, { n: "Dad", o: DAD, it: "🕯️", what: "the candles" }, { n: "Harshitha", o: HARSHITHA, it: "🎁", what: "a gift" }];
-    let k = 0, miss = 0, fx = .5, fy = 0, vy = 0, falling = false, px = .5, raf = 0, last = performance.now(), dead = false; const T = [];
+    const G = [{ n: "Mom", o: PADMA, it: "🎂", what: "the cake" }, { n: "Appu", o: APPU, it: "🍬", what: "the sprinkles" }, { n: "Dad", o: DAD, it: "🕯️", what: "the candles" }, { n: "Harshitha", o: HARSHITHA, it: "🎁", what: "a gift from her and Jaanu" }];
+    let catchW = .15, k = 0, miss = 0, fx = .5, fy = 0, vy = 0, falling = false, px = .5, raf = 0, last = performance.now(), dead = false; const T = [];
     el.innerHTML = `<div class="hud2"><span>Caught <b class="ck">0</b>/4</span><span>Oops <b class="cm">0</b></span></div>
       <div class="arena party"><div class="givers">${G.map((g, i) => `<div class="gv" data-i="${i}">${chibi(g.o)}<small>${g.n}</small></div>`).join("")}</div>
       <div class="drop"></div><div class="plate"><div class="stack"></div><i></i></div><div class="bubble"></div><p class="hint" style="color:var(--ink);text-shadow:none">Drag the plate to catch everything</p></div>`;
@@ -1415,12 +1606,13 @@ const GAMES = {
         fy += vy * dt; vy += .22 * dt; drop.style.left = fx * 100 + "%"; drop.style.top = fy * 100 + "%";
         if (fy >= .8) {
           falling = false; drop.style.display = "none";
-          if (Math.abs(fx - px) < .15) { k++; stack.insertAdjacentHTML("beforeend", `<span>${G[k - 1].it}</span>`); $(".ck", el).textContent = k; sfx.good(); T.push(setTimeout(k >= 4 ? blow : spawn, 800)); }
+          if (Math.abs(fx - px) < catchW) { k++; stack.insertAdjacentHTML("beforeend", `<span>${G[k - 1].it}</span>`); $(".ck", el).textContent = k; sfx.good(); T.push(setTimeout(k >= 4 ? blow : spawn, 800)); }
           else { miss++; $(".cm", el).textContent = miss; sfx.bad(); say(ar, "Oops! One more time.", 30, 46, "50%", 1200); T.push(setTimeout(spawn, 900)); }
         }
       }
       raf = requestAnimationFrame(frame);
     }
+    el.help = () => { if (k >= 4) return ""; catchW = .32; plate.style.width = "48%"; return "Pranshu: I brought a BIG plate! 🍽️"; };
     raf = requestAnimationFrame(frame); T.push(setTimeout(spawn, 900));
     function blow(){
       cancelAnimationFrame(raf);
@@ -1429,7 +1621,8 @@ const GAMES = {
         <div class="arena party"><div class="bigcake"><div class="candles">${Array.from({ length: 5 }, () => `<button class="cdl" type="button" aria-label="Candle"><i></i></button>`).join("")}</div><div class="cakebody"></div></div>
         <div class="yb">${chibi(yOpts({ face: "happy" }))}</div><div class="pr">${chibi(PRANSHU)}</div><div class="bubble"></div><p class="hint" style="color:var(--ink);text-shadow:none">Tap each candle to blow it out with Pranshu</p></div>`;
       const a2 = $(".arena", el), pr = $(".pr", el);
-      say(a2, "Pranshu: Let's blow together!", 4, 6, "25%", 2400);
+      say(a2, "Pranshu: Let's blow together, Yashu!", 4, 6, "25%", 2400);
+      el.help = () => { const c = $$(".cdl:not(.out)", el).slice(0, 2); c.forEach(x => x.click()); return c.length ? "Pranshu: Phoooo! I got two! 🌬️" : ""; };
       $$(".cdl", el).forEach(c => c.addEventListener("click", () => {
         if (c.classList.contains("out")) return; c.classList.add("out"); left--; $(".cl", el).textContent = left; tone(300 + left * 80, .12, "sine");
         pr.classList.remove("spin"); void pr.offsetWidth; pr.classList.add("spin");
